@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ElorMov">
         <activity
+            android:name=".CrearReunionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HorarioProfesorSeleccionadoActivity"
+            android:exported="false" />
+        <activity
             android:name=".DatosAlumnoActivity"
             android:exported="false" />
         <activity
