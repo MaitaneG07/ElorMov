@@ -12,13 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ElorMov">
         <activity
+            android:name=".DatosAlumnoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ReunionesActivity"
             android:exported="false" />
         <activity
             android:name=".ConsultaHorariosProfesorActivity"
             android:exported="false" />
         <activity
-            android:name=".ConsultaAlumnos"
+            android:name=".ConsultaAlumnosActivity"
             android:exported="false" />
         <activity
             android:name=".PaginaPrincipalActivity"
