@@ -24,5 +24,6 @@
     <string name="boton_consultarReuniones">Consultar reuniones</string>
     <string name="boton_crear">Crear</string>
     <string name="boton_cancelar">Cancelar</string>
+    <string name="annadir_imagen">Añadir imagen</string>
 
 </resources>
