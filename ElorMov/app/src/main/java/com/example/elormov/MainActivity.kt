@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                         when (respuesta) {
                             "OK" -> {
                                 Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this, PerfilActivity::class.java))
+                                startActivity(Intent(this, PaginaPrincipalActivity::class.java))
                                 finish()
                             }
                             "ERROR" -> {

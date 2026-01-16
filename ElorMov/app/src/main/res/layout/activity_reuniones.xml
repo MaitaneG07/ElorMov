@@ -7,4 +7,34 @@
     android:layout_height="match_parent"
     tools:context=".ReunionesActivity">
 
+    <Button
+        android:id="@+id/buttonAceptarReuniones"
+        android:layout_width="110dp"
+        android:layout_height="47dp"
+        android:backgroundTint="#008aab"
+        android:text="@string/boton_aceptar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonVolverReuniones"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+    <Button
+        android:id="@+id/buttonVolverReuniones"
+        android:layout_width="110dp"
+        android:layout_height="47dp"
+        android:backgroundTint="#008aab"
+        android:text="@string/boton_volver"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/buttonAceptarReuniones"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="615dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

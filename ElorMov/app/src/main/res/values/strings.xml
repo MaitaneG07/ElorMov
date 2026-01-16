@@ -16,4 +16,13 @@
     //botones
     <string name="boton_aceptar">Aceptar</string>
     <string name="boton_recuperar_password">Recuperar contraseña</string>
+    <string name="boton_salir">Salir</string>
+    <string name="boton_volver">Volver</string>
+    <string name="boton_consultarEstandar">Consultar</string>
+    <string name="boton_consultarHorarioProfesor">Consultar horario del Profesor</string>
+    <string name="boton_consultarAlumnos">Consultar alumnos</string>
+    <string name="boton_consultarReuniones">Consultar reuniones</string>
+    <string name="boton_crear">Crear</string>
+    <string name="boton_cancelar">Cancelar</string>
+
 </resources>

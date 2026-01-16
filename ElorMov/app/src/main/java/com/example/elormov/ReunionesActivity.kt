@@ -1,20 +1,24 @@
 package com.example.elormov
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class ReunionesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_reuniones)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        val botonCrear : Button = findViewById(R.id.buttonAceptarReuniones)
+        val botonVolver : Button = findViewById(R.id.buttonVolverReuniones)
+
+        botonCrear.setOnClickListener {
+            startActivity(Intent(this, CrearReunionActivity::class.java))
+        }
+
+        botonVolver.setOnClickListener {
+            finish()
         }
     }
 }
