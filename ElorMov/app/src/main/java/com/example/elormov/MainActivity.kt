@@ -31,7 +31,15 @@ class MainActivity : AppCompatActivity() {
             popUpRecuperarContrasenna()
         }
 
+        //para poder pasar a la siguiente ventana sin login
         btnAceptar.setOnClickListener {
+            Toast.makeText(this, "Login desactivado (modo pruebas)", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, PaginaPrincipalActivity::class.java))
+            finish()
+        }
+
+        //comentado para poder usarlo sin login
+        /*btnAceptar.setOnClickListener {
             val usuario = inputUsuario.text.toString()
             val password = inputPassword.text.toString()
 
@@ -71,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }.start()
-        }
+        }*/
     }
 
     private fun conectarAlServidor(txtEstado: TextView?) {
