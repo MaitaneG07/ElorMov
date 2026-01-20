@@ -35,11 +35,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         //para poder pasar a la siguiente ventana sin login
-        btnAceptar.setOnClickListener {
+        /*btnAceptar.setOnClickListener {
             Toast.makeText(this, "Login desactivado (modo pruebas)", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, PaginaPrincipalActivity::class.java))
             finish()
-        }
+        }*/
 
         //comentado para poder usarlo sin login
         /*btnAceptar.setOnClickListener {
@@ -83,6 +83,46 @@ class MainActivity : AppCompatActivity() {
                 }
             }.start()
         }*/
+        btnAceptar.setOnClickListener {
+            val usuario = inputUsuario.text.toString().trim()
+            val password = inputPassword.text.toString().trim()
+
+            if (usuario.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Por favor complete todos los campos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            lifecycleScope.launch {
+                try {
+                    // Trae todos los usuarios del backend
+                    val users = RetrofitClient.usersInterface.getAllUsers()
+
+                    // Busca por email O username y compara password
+                    val userOk = users.firstOrNull { u ->
+                        (u.email.equals(usuario, ignoreCase = true) ||
+                                u.username.equals(usuario, ignoreCase = true)) &&
+                                u.password == password
+                    }
+
+                    if (userOk != null) {
+                        Toast.makeText(this@MainActivity, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+
+                        // (Opcional) Pasar datos a la siguiente activity
+                        val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
+                        intent.putExtra("USER_ID", userOk.id)
+                        intent.putExtra("USER_NOMBRE", userOk.nombre ?: "")
+                        intent.putExtra("USER_APELLIDOS", userOk.apellidos ?: "")
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this@MainActivity, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
+                    }
+
+                } catch (e: Exception) {
+                    Toast.makeText(this@MainActivity, "Error al comunicarse con el servidor", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun conectarAlServidor(txtEstado: TextView?) {

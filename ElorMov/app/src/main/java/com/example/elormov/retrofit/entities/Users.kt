@@ -4,6 +4,7 @@ data class Users(
     val id: Int,
     val email: String,
     val username: String,
+    val password: String,
     val nombre: String?,
     val apellidos: String?,
     val dni: String?,
