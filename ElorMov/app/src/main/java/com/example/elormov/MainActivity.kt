@@ -15,13 +15,17 @@ class MainActivity : AppCompatActivity() {
 
     private var cliente: RetrofitClient? = null
 
-    private val ipServidor = "10.0.2.2"
+    //private val ipServidor = "10.0.2.2"
+    //ip del servidor de Giselle:
+    private val ipServidor = "10.5.104.31"
     //cambiar puerto cuando sea necesario
     private val puerto = 9000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        RetrofitClient.init(ipServidor, puerto)
 
         conectarAlServidor(null)
 
@@ -111,7 +115,6 @@ class MainActivity : AppCompatActivity() {
                         val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
                         intent.putExtra("USER_ID", userOk.id)
                         intent.putExtra("USER_NOMBRE", userOk.nombre ?: "")
-                        intent.putExtra("USER_APELLIDOS", userOk.apellidos ?: "")
                         startActivity(intent)
                         finish()
                     } else {

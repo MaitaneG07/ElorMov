@@ -8,6 +8,7 @@
     <string name="enviarNuevoPassword">Clave nueva enviada a tu email</string>
     <string name="si">SI</string>
     <string name="no">NO</string>
+    <string name="perfil">PERFIL</string>
 
     //inputs
     <string name="introducir_usuario">Introducir Usuario</string>

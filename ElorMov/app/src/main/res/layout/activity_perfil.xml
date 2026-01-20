@@ -46,7 +46,7 @@
         app:layout_constraintVertical_bias="0.442" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewDatosPerfil"
         android:layout_width="242dp"
         android:layout_height="162dp"
         android:text="TextView"
@@ -56,4 +56,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.711" />
+
+    <TextView
+        android:id="@+id/textViewNombrePerfil"
+        android:layout_width="93dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:text="@string/perfil"
+        android:textAlignment="center"
+        android:textColor="#008aab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.045" />
 </androidx.constraintlayout.widget.ConstraintLayout>

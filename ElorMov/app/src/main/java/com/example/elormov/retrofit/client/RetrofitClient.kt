@@ -11,13 +11,17 @@ import java.net.SocketTimeoutException
 
 object RetrofitClient {
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:9000/") // localhost desde el emulador
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+    private var retrofit: Retrofit? = null
+    lateinit var usersInterface: UsersInterface
 
-    val usersInterface: UsersInterface =
-        retrofit.create(UsersInterface::class.java)
+    fun init(ip: String, puerto: Int) {
+        retrofit = Retrofit.Builder()
+            .baseUrl("http://$ip:$puerto/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        usersInterface = retrofit!!.create(UsersInterface::class.java)
+    }
 }
 
 /*class RetrofitClient(

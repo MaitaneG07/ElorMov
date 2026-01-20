@@ -22,6 +22,7 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pagina_principal)
 
         val nombre = intent.getStringExtra("USER_NOMBRE") ?: ""
+        val userId = intent.getIntExtra("USER_ID", -1)
 
         val botonPerfil: ImageButton = findViewById(R.id.btnPerfil)
         val botonConsultar : Button = findViewById(R.id.buttonConsultarPP)
@@ -57,6 +58,7 @@ class PaginaPrincipalActivity : AppCompatActivity() {
 
         botonPerfil.setOnClickListener {
             val intent = Intent(this, PerfilActivity::class.java)
+            intent.putExtra("USER_ID", userId)
             intent.putExtra("TIPO_USUARIO", tipoDeUsuario)
             startActivity(intent)
         }
