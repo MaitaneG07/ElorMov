@@ -21,10 +21,15 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pagina_principal)
 
+        val nombre = intent.getStringExtra("USER_NOMBRE") ?: ""
+
         val botonPerfil: ImageButton = findViewById(R.id.btnPerfil)
         val botonConsultar : Button = findViewById(R.id.buttonConsultarPP)
         val botonSalir : Button = findViewById(R.id.buttonSalirPP)
         val botonConsultarReuniones : Button = findViewById(R.id.buttonConsultarReunionesPP)
+        val nombreUsuario : TextView = findViewById(R.id.textViewNombreUsuarioPP)
+
+        nombreUsuario.text = "$nombre" .trim()
 
         //dependiendo de si entra un alumno o un profesor
         if (tipoDeUsuario == 3) {
