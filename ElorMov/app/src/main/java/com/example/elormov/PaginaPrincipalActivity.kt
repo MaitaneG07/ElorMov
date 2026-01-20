@@ -4,10 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class PaginaPrincipalActivity : AppCompatActivity() {
 
@@ -31,6 +34,21 @@ class PaginaPrincipalActivity : AppCompatActivity() {
             // Alumno
             botonConsultar.setText(R.string.boton_consultarHorarioProfesor)
         }
+
+        //empieza la prueba
+        val tv = findViewById<TextView>(R.id.textViewPrueba)
+
+        lifecycleScope.launch {
+            try {
+                val users = RetrofitClient.usersInterface.getAllUsers()
+
+                val u = users.firstOrNull { it.username == "alumno1" }
+                tv.text = "${u?.nombre ?: ""} ${u?.apellidos ?: ""}"
+            } catch (e: Exception) {
+                tv.text = "Error: ${e.message}"
+            }
+        }
+        //termina la prueba
 
         botonPerfil.setOnClickListener {
             val intent = Intent(this, PerfilActivity::class.java)

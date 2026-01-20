@@ -7,14 +7,17 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private var cliente: RetrofitClient? = null
 
-    private val ipServidor = "10.5.104.31"
-    private val puerto = 8081
+    private val ipServidor = "10.0.2.2"
+    //cambiar puerto cuando sea necesario
+    private val puerto = 9000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun conectarAlServidor(txtEstado: TextView?) {
-        Thread {
+        /*Thread {
             cliente = RetrofitClient(ipServidor, puerto)
             val conectado = cliente!!.conectar()
 
@@ -95,7 +98,21 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show()
                 }
             }
-        }.start()
+        }.start()*/
+        //codigo de prueba
+        txtEstado?.text = "Estado: Conectando..."
+
+        lifecycleScope.launch {
+            try {
+                // "Ping": si esto responde, hay conexión al backend
+                RetrofitClient.usersInterface.getAllUsers()
+
+                txtEstado?.text = "Estado: Conectado"
+            } catch (e: Exception) {
+                txtEstado?.text = "Estado: Error de conexión"
+                Toast.makeText(this@MainActivity, "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun popUpRecuperarContrasenna() {

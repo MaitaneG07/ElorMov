@@ -1,3 +1,6 @@
+import com.example.elormov.retrofit.endpoints.UsersInterface
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -5,7 +8,19 @@ import java.io.PrintWriter
 import java.net.Socket
 import java.net.SocketTimeoutException
 
-class RetrofitClient(
+
+object RetrofitClient {
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("http://10.0.2.2:9000/") // localhost desde el emulador
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val usersInterface: UsersInterface =
+        retrofit.create(UsersInterface::class.java)
+}
+
+/*class RetrofitClient(
     private val ipServidor: String,
     private val puerto: Int
 ) {
@@ -95,4 +110,4 @@ class RetrofitClient(
     fun estaConectado(): Boolean {
         return socket?.isConnected == true && socket?.isClosed == false
     }
-}
+}*/

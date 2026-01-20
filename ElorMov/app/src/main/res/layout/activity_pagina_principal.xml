@@ -36,10 +36,9 @@
         android:id="@+id/buttonConsultarPP"
         android:layout_width="316dp"
         android:layout_height="46dp"
-        android:layout_marginTop="24dp"
         android:backgroundTint="#211261"
         android:text="@string/boton_consultarEstandar"
-        app:layout_constraintBottom_toTopOf="@+id/buttonConsultarHorariosPP"
+        app:layout_constraintBottom_toTopOf="@+id/buttonConsultarReunionesPP"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,14 +48,13 @@
         android:id="@+id/buttonSalirPP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         android:backgroundTint="#008aab"
         android:text="@string/boton_salir"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonConsultarHorariosPP" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonConsultarReunionesPP" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -79,5 +77,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.064" />
+
+    <TextView
+        android:id="@+id/textViewPrueba"
+        android:layout_width="290dp"
+        android:layout_height="253dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.361" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
