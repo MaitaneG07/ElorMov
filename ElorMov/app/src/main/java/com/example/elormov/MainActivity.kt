@@ -128,7 +128,12 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 } catch (e: Exception) {
-                    Toast.makeText(this@MainActivity, "Error al comunicarse con el servidor", Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Error: ${e.javaClass.simpleName} - ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
