@@ -1,6 +1,8 @@
 package com.example.elormov
 
 import RetrofitClient
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -15,9 +17,10 @@ class MainActivity : AppCompatActivity() {
 
     private var cliente: RetrofitClient? = null
 
-    //private val ipServidor = "10.0.2.2"
+    //ip para usar el servidor en el mismo pc
+    private val ipServidor = "10.0.2.2"
     //ip del servidor de Giselle:
-    private val ipServidor = "10.5.104.31"
+    //private val ipServidor = "10.5.104.31"
     //cambiar puerto cuando sea necesario
     private val puerto = 9000
 
@@ -31,10 +34,11 @@ class MainActivity : AppCompatActivity() {
 
         val inputUsuario = findViewById<TextInputEditText>(R.id.InputEmail)
         val inputPassword = findViewById<TextInputEditText>(R.id.InputContrasenya)
-        val btnAceptar = findViewById<Button>(R.id.buttonMainAceptar)
-        val btnRecuperar = findViewById<Button>(R.id.buttonRecuperarPassword)
+        cargarDatosLogin(inputUsuario, inputPassword)
+        val btnIniciarSesion = findViewById<Button>(R.id.buttonMainIniciarSesion)
+        val recuperarPassword = findViewById<TextView>(R.id.textRecuperarPassword)
 
-        btnRecuperar.setOnClickListener {
+        recuperarPassword.setOnClickListener {
             popUpRecuperarContrasenna()
         }
 
@@ -87,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }.start()
         }*/
-        btnAceptar.setOnClickListener {
+        btnIniciarSesion.setOnClickListener {
             val usuario = inputUsuario.text.toString().trim()
             val password = inputPassword.text.toString().trim()
 
@@ -109,7 +113,9 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     if (userOk != null) {
-                        Toast.makeText(this@MainActivity, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+                        guardarDatos(usuario, password)
+
+                        Toast.makeText(this@MainActivity, "Logeado con éxito", Toast.LENGTH_SHORT).show()
 
                         // (Opcional) Pasar datos a la siguiente activity
                         val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
@@ -122,7 +128,12 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 } catch (e: Exception) {
-                    Toast.makeText(this@MainActivity, "Error al comunicarse con el servidor", Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Error: ${e.javaClass.simpleName} - ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
@@ -178,5 +189,29 @@ class MainActivity : AppCompatActivity() {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    @SuppressLint("UseKtx")
+    private fun guardarDatos(email: String, password: String) {
+        val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
+        with(prefs.edit()) {
+            putString("email", email)
+            putString("password", password)
+            putBoolean("recordar", true)
+            apply()
+        }
+    }
+
+    private fun cargarDatosLogin(
+        inputUsuario: TextInputEditText,
+        inputPassword: TextInputEditText
+    ) {
+        val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
+
+        val recordar = prefs.getBoolean("recordar", false)
+        if (recordar) {
+            inputUsuario.setText(prefs.getString("email", ""))
+            inputPassword.setText(prefs.getString("password", ""))
+        }
     }
 }
