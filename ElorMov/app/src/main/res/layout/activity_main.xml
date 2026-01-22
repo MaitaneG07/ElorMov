@@ -57,6 +57,8 @@
         android:layout_height="wrap_content"
         android:text="@string/usuario"
         android:textColor="#211261"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -70,6 +72,8 @@
         android:layout_height="wrap_content"
         android:text="@string/password"
         android:textColor="#211261"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -78,33 +82,30 @@
         app:layout_constraintVertical_bias="0.557" />
 
     <Button
-        android:id="@+id/buttonMainAceptar"
-        android:layout_width="126dp"
-        android:layout_height="35dp"
+        android:id="@+id/buttonMainIniciarSesion"
+        android:layout_width="185dp"
+        android:layout_height="46dp"
         android:backgroundTint="#008aab"
-        android:text="@string/boton_aceptar"
+        android:text="@string/boton_iniciar_sesion"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.89" />
+        app:layout_constraintVertical_bias="0.836" />
 
-    <Button
-        android:id="@+id/buttonRecuperarPassword"
-        android:layout_width="170dp"
-        android:layout_height="36dp"
-        android:autoSizeMaxTextSize="14sp"
-        android:autoSizeMinTextSize="10sp"
-        android:autoSizeStepGranularity="1sp"
-        android:autoSizeTextType="uniform"
-        android:backgroundTint="#211261"
-        android:gravity="center"
+    <TextView
+        android:id="@+id/textRecuperarPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="@string/boton_recuperar_password"
+        android:textColor="#008aab"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.69" />
+        app:layout_constraintVertical_bias="0.658" />
 </androidx.constraintlayout.widget.ConstraintLayout>

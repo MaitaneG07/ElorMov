@@ -35,10 +35,10 @@ class MainActivity : AppCompatActivity() {
         val inputUsuario = findViewById<TextInputEditText>(R.id.InputEmail)
         val inputPassword = findViewById<TextInputEditText>(R.id.InputContrasenya)
         cargarDatosLogin(inputUsuario, inputPassword)
-        val btnAceptar = findViewById<Button>(R.id.buttonMainAceptar)
-        val btnRecuperar = findViewById<Button>(R.id.buttonRecuperarPassword)
+        val btnIniciarSesion = findViewById<Button>(R.id.buttonMainIniciarSesion)
+        val recuperarPassword = findViewById<TextView>(R.id.textRecuperarPassword)
 
-        btnRecuperar.setOnClickListener {
+        recuperarPassword.setOnClickListener {
             popUpRecuperarContrasenna()
         }
 
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }.start()
         }*/
-        btnAceptar.setOnClickListener {
+        btnIniciarSesion.setOnClickListener {
             val usuario = inputUsuario.text.toString().trim()
             val password = inputPassword.text.toString().trim()
 
