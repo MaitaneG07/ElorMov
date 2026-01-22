@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">ElorMov</string>
+    //texts
+    <string name="usuario">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="recuperarPasswordPregunta">¿Quieres recuperar la contraseña?</string>
+    <string name="recuperarPassword">Recuperar contraseña</string>
+    <string name="enviarNuevoPassword">Clave nueva enviada a tu email</string>
+    <string name="si">SI</string>
+    <string name="no">NO</string>
+    <string name="perfil">PERFIL</string>
+
+    //inputs
+    <string name="introducir_usuario">Introducir Usuario</string>
+    <string name="introducir_password">Introducir Contraseña</string>
+
+    //botones
+    <string name="boton_aceptar">Aceptar</string>
+    <string name="boton_recuperar_password">Recuperar contraseña</string>
+    <string name="boton_salir">Salir</string>
+    <string name="boton_volver">Volver</string>
+    <string name="boton_consultarEstandar">Consultar</string>
+    <string name="boton_consultarHorarioProfesor">Consultar horario del Profesor</string>
+    <string name="boton_consultarAlumnos">Consultar alumnos</string>
+    <string name="boton_consultarReuniones">Consultar reuniones</string>
+    <string name="boton_crear">Crear</string>
+    <string name="boton_cancelar">Cancelar</string>
+    <string name="annadir_imagen">Añadir imagen</string>
+
+</resources>
