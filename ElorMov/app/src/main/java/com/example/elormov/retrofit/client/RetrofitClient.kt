@@ -14,9 +14,9 @@ object RetrofitClient {
     private var retrofit: Retrofit? = null
     lateinit var usersInterface: UsersInterface
 
-    fun init(ip: String, puerto: Int) {
+    fun init(ipServidor: String, puerto: Int) {
         retrofit = Retrofit.Builder()
-            .baseUrl("http://$ip:$puerto/")
+            .baseUrl("http://$ipServidor:$puerto/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

@@ -18,7 +18,9 @@ class MainActivity : AppCompatActivity() {
     private var cliente: RetrofitClient? = null
 
     //ip para usar el servidor en el mismo pc
-    //private val ipServidor = "10.0.2.2"
+   // private val ipServidor = "10.0.2.2"
+    //ip del servidor de Akira:
+    //private val ipServidor = "10.5.104.32"
     //ip del servidor de Giselle:
     //private val ipServidor = "10.5.104.31"
     //ip del servidor de Maitane:
