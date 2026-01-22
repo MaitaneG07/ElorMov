@@ -115,7 +115,7 @@ class MainActivity : AppCompatActivity() {
                     if (userOk != null) {
                         guardarDatos(usuario, password)
 
-                        Toast.makeText(this@MainActivity, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "Logeado con éxito", Toast.LENGTH_SHORT).show()
 
                         // (Opcional) Pasar datos a la siguiente activity
                         val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
