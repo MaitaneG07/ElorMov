@@ -5,17 +5,14 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 class PaginaPrincipalActivity : AppCompatActivity() {
 
-    //variable de prueba para seber si es profesor(3) o alumno(4), mas adelante la recibe del login
-    private var tipoDeUsuario : Int = 3;
+    // ✅ Ahora se recibe del login
+    private var tipoDeUsuario: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,13 +21,16 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         val nombre = intent.getStringExtra("USER_NOMBRE") ?: ""
         val userId = intent.getIntExtra("USER_ID", -1)
 
-        val botonPerfil: ImageButton = findViewById(R.id.btnPerfil)
-        val botonConsultar : Button = findViewById(R.id.buttonConsultarPP)
-        val botonSalir : Button = findViewById(R.id.buttonSalirPP)
-        val botonConsultarReuniones : Button = findViewById(R.id.buttonConsultarReunionesPP)
-        val nombreUsuario : TextView = findViewById(R.id.textViewNombreUsuarioPP)
+        tipoDeUsuario = intent.getIntExtra("TIPO_ID", -1)
 
-        nombreUsuario.text = "$nombre" .trim()
+        val botonPerfil: ImageButton = findViewById(R.id.btnPerfil)
+        val botonConsultar: Button = findViewById(R.id.buttonConsultarPP)
+        val botonSalir: Button = findViewById(R.id.buttonSalirPP)
+        val botonConsultarReuniones: Button = findViewById(R.id.buttonConsultarReunionesPP)
+        val nombreUsuario: TextView = findViewById(R.id.textViewNombreUsuarioPP)
+        val tvPrueba: TextView = findViewById(R.id.textViewPrueba)
+
+        nombreUsuario.text = "$nombre".trim()
 
         //dependiendo de si entra un alumno o un profesor
         if (tipoDeUsuario == 3) {
@@ -42,19 +42,16 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         }
 
         //empieza la prueba
-        val tv = findViewById<TextView>(R.id.textViewPrueba)
+        val usuarioRecibido = intent.getSerializableExtra("USER_DATA")
 
-        lifecycleScope.launch {
-            try {
-                val users = RetrofitClient.usersInterface.getAllUsers()
-
-                val u = users.firstOrNull { it.username == "alumno1" }
-                tv.text = "${u?.nombre ?: ""} ${u?.apellidos ?: ""}"
-            } catch (e: Exception) {
-                tv.text = "Error: ${e.message}"
-            }
+        if (usuarioRecibido != null) {
+            tvPrueba.text =
+                "USER_DATA recibido correctamente:\n\n" +
+                        usuarioRecibido.toString()
+        } else {
+            tvPrueba.text = "❌ USER_DATA NO recibido"
         }
-        //termina la prueba
+        //termina prueba
 
         botonPerfil.setOnClickListener {
             val intent = Intent(this, PerfilActivity::class.java)

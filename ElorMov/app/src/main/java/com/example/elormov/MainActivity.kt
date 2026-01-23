@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.elormov.retrofit.modelo.LoginRequest
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
@@ -22,9 +23,9 @@ class MainActivity : AppCompatActivity() {
     //ip del servidor de Akira:
     //private val ipServidor = "10.5.104.32"
     //ip del servidor de Giselle:
-    //private val ipServidor = "10.5.104.31"
+    private val ipServidor = "10.5.104.31"
     //ip del servidor de Maitane:
-    private val ipServidor = "10.5.104.25"
+    //private val ipServidor = "10.5.104.25"
     //cambiar puerto cuando sea necesario
     private val puerto = 9000
 
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         val inputUsuario = findViewById<TextInputEditText>(R.id.InputEmail)
         val inputPassword = findViewById<TextInputEditText>(R.id.InputContrasenya)
         cargarDatosLogin(inputUsuario, inputPassword)
+
         val btnIniciarSesion = findViewById<Button>(R.id.buttonMainIniciarSesion)
         val recuperarPassword = findViewById<TextView>(R.id.textRecuperarPassword)
 
@@ -46,55 +48,6 @@ class MainActivity : AppCompatActivity() {
             popUpRecuperarContrasenna()
         }
 
-        //para poder pasar a la siguiente ventana sin login
-        /*btnAceptar.setOnClickListener {
-            Toast.makeText(this, "Login desactivado (modo pruebas)", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, PaginaPrincipalActivity::class.java))
-            finish()
-        }*/
-
-        //comentado para poder usarlo sin login
-        /*btnAceptar.setOnClickListener {
-            val usuario = inputUsuario.text.toString()
-            val password = inputPassword.text.toString()
-
-            if (usuario.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Por favor complete todos los campos", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (cliente == null || !cliente!!.estaConectado()) {
-                Toast.makeText(this, "No hay conexión. Intente reconectar.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            Thread {
-                try {
-                    val respuesta = cliente!!.enviarYRecibir("LOGIN:$usuario:$password")
-
-                    runOnUiThread {
-                        when (respuesta) {
-                            "OK" -> {
-                                Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this, PaginaPrincipalActivity::class.java))
-                                finish()
-                            }
-                            "ERROR" -> {
-                                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-                            }
-                            else -> {
-                                Toast.makeText(this, "No se recibió respuesta del servidor", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-
-                } catch (e: Exception) {
-                    runOnUiThread {
-                        Toast.makeText(this, "Error al comunicarse con el servidor", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }.start()
-        }*/
         btnIniciarSesion.setOnClickListener {
             val usuario = inputUsuario.text.toString().trim()
             val password = inputPassword.text.toString().trim()
@@ -104,31 +57,48 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            val request = LoginRequest(username = usuario, password = password)
+
             lifecycleScope.launch {
                 try {
-                    // Trae todos los usuarios del backend
-                    val users = RetrofitClient.usersInterface.getAllUsers()
+                    val response = RetrofitClient.usersInterface.login(request)
 
-                    // Busca por email O username y compara password
-                    val userOk = users.firstOrNull { u ->
-                        (u.email.equals(usuario, ignoreCase = true) ||
-                                u.username.equals(usuario, ignoreCase = true)) &&
-                                u.password == password
-                    }
+                    if (response.isSuccessful) {
+                        val loginResponse = response.body()
+                        val userOk = loginResponse?.user
 
-                    if (userOk != null) {
-                        guardarDatos(usuario, password)
+                        if (userOk != null) {
+                            guardarDatos(usuario, password)
 
-                        Toast.makeText(this@MainActivity, "Logeado con éxito", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Logeado con éxito",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
-                        // (Opcional) Pasar datos a la siguiente activity
-                        val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
-                        intent.putExtra("USER_ID", userOk.id)
-                        intent.putExtra("USER_NOMBRE", userOk.nombre ?: "")
-                        startActivity(intent)
-                        finish()
+                            val tipoId = userOk.tipos?.id ?: -1
+
+                            val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
+                            intent.putExtra("USER_ID", userOk.id)
+                            intent.putExtra("USER_NOMBRE", userOk.nombre ?: "")
+                            intent.putExtra("TIPO_ID", tipoId)
+                            intent.putExtra("USER_DATA", usuario)
+                            startActivity(intent)
+                            finish()
+                        } else {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Respuesta inválida del servidor",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
                     } else {
-                        Toast.makeText(this@MainActivity, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Usuario o contraseña incorrectos",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                 } catch (e: Exception) {
@@ -144,20 +114,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun conectarAlServidor(txtEstado: TextView?) {
-        /*Thread {
-            cliente = RetrofitClient(ipServidor, puerto)
-            val conectado = cliente!!.conectar()
-
-            runOnUiThread {
-                if (conectado) {
-                    txtEstado?.text = "Estado: Conectado"
-                } else {
-                    txtEstado?.text = "Estado: Error de conexión"
-                    Toast.makeText(this, "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }.start()*/
-        //codigo de prueba
         txtEstado?.text = "Estado: Conectando..."
 
         lifecycleScope.launch {
