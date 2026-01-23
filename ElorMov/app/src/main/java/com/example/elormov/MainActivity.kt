@@ -1,7 +1,5 @@
 package com.example.elormov
 
-
-import RetrofitClient
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,95 +8,111 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.elormov.retrofit.modelo.LoginRequest
+import com.example.elormov.retrofit.modelo.LoginRequest // Asegúrate de que este import es correcto
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    // Ajusta la IP según corresponda
-    //private val ipServidor = "10.5.104.25"
-
-    //ip para usar el servidor en el mismo pc
-    private val ipServidor = "10.0.2.2"
+    // Configuración del servidor
+    private val ipServidor = "10.0.2.2" // Localhost para el emulador
     private val puerto = 9000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Inicializamos Retrofit
+        // 1. Inicializar Retrofit
         try {
             RetrofitClient.init(ipServidor, puerto)
         } catch (e: Exception) {
             Toast.makeText(this, "Error config: ${e.message}", Toast.LENGTH_SHORT).show()
         }
 
-        // Referencias UI
-        // Aunque el ID del XML se llame InputEmail, aquí lo trataremos como username
-        val inputUsername = findViewById<TextInputEditText>(R.id.InputEmail)
+        // 2. Referencias UI
+        val inputUsername = findViewById<TextInputEditText>(R.id.InputEmail) // XML ID se mantiene
         val inputPassword = findViewById<TextInputEditText>(R.id.InputContrasenya)
         val btnIniciarSesion = findViewById<Button>(R.id.buttonMainIniciarSesion)
         val recuperarPassword = findViewById<TextView>(R.id.textRecuperarPassword)
 
-        // 1. Cargar datos previos (username/pass)
+        // 3. Cargar datos previos si existen (Autocompletar)
         cargarDatosLogin(inputUsername, inputPassword)
 
-        recuperarPassword.setOnClickListener { popUpRecuperarContrasenna() }
+        // 4. Listener Recuperar contraseña
+        recuperarPassword.setOnClickListener {
+            popUpRecuperarContrasenna()
+        }
 
-        // 2. Click en Login
+        // 5. Listener BOTÓN LOGIN
         btnIniciarSesion.setOnClickListener {
-            val username = inputUsername.text.toString().trim()
-            val password = inputPassword.text.toString().trim()
+            // Obtenemos el texto de los inputs
+            val usernameTexto = inputUsername.text.toString().trim()
+            val passwordTexto = inputPassword.text.toString().trim()
 
-            if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Complete todos los campos", Toast.LENGTH_SHORT).show()
+            if (usernameTexto.isEmpty() || passwordTexto.isEmpty()) {
+                Toast.makeText(this, "Por favor rellena todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            realizarLogin(username, password)
-        }
-    }
+            // Creamos el objeto para enviar (usando el texto, no el EditText)
+            val request = LoginRequest(username = usernameTexto, password = passwordTexto)
 
-    private fun realizarLogin(username: String, pass: String) {
-        lifecycleScope.launch {
-            try {
-                // CAMBIO: Ahora enviamos username en el objeto
-                val request = LoginRequest(username = username, password = pass)
+            // Lanzamos la corrutina
+            lifecycleScope.launch {
+                try {
+                    // Llamada al servidor
+                    val response = RetrofitClient.usersInterface.login(request)
 
-                val response = RetrofitClient.usersInterface.login(request)
+                    if (response.isSuccessful) {
+                        val loginResponse = response.body()
+                        val usuario = loginResponse?.user
 
-                if (response.isSuccessful) {
-                    val loginResponse = response.body()
-                    val usuarioObj = loginResponse?.user
+                        if (usuario != null) {
+                            // A) Login correcto: Guardamos credenciales para la próxima vez
+                            guardarDatos(usernameTexto, passwordTexto)
 
-                    if (usuarioObj != null) {
-                        Toast.makeText(this@MainActivity, "Hola ${usuarioObj.nombre}", Toast.LENGTH_SHORT).show()
+                            // B) Navegación según Tipo de Usuario
+                            val tipoId = usuario.tipos?.id
 
-                        // Guardamos username en lugar de email
-                        guardarDatos(username, pass)
-
-                        val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
-                        intent.putExtra("USER_ID", usuarioObj.id)
-                        startActivity(intent)
-                        finish()
+                            when (tipoId) {
+                                4 -> { // ALUMNO
+                                    val intent = Intent(this@MainActivity, AlumnoActivity::class.java)
+                                    intent.putExtra("USER_DATA", usuario)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                3 -> { // PROFESOR
+                                    val intent = Intent(this@MainActivity, ProfesorActivity::class.java)
+                                    intent.putExtra("USER_DATA", usuario)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                                else -> {
+                                    Toast.makeText(this@MainActivity, "Rol desconocido ($tipoId)", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                        }
+                    } else {
+                        // Error del servidor (401, 404, etc.)
+                        Toast.makeText(this@MainActivity, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()
                     }
-                } else {
-                    Toast.makeText(this@MainActivity, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()
-                }
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Toast.makeText(this@MainActivity, "Error conexión: ${e.message}", Toast.LENGTH_LONG).show()
+                } catch (e: Exception) {
+                    // Error de conexión
+                    e.printStackTrace()
+                    Toast.makeText(this@MainActivity, "Fallo de conexión: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
-    }
+    } // Fin del onCreate
 
-    // Guardar en Preferencias (Username)
+    // --- MÉTODOS AUXILIARES ---
+
+    // Guardar en Preferencias
     private fun guardarDatos(username: String, password: String) {
         val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
         with(prefs.edit()) {
-            putString("username", username) // Clave cambiada a 'username'
+            putString("username", username)
             putString("password", password)
             putBoolean("recordar", true)
             apply()
@@ -110,13 +124,13 @@ class MainActivity : AppCompatActivity() {
         val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
         val recordar = prefs.getBoolean("recordar", false)
         if (recordar) {
-            // Leemos la clave 'username'
             inputUser.setText(prefs.getString("username", ""))
             inputPass.setText(prefs.getString("password", ""))
         }
     }
 
     private fun popUpRecuperarContrasenna() {
-        // ... (Tu código del popup igual)
+        Toast.makeText(this, "Funcionalidad de recuperar contraseña aquí", Toast.LENGTH_SHORT).show()
     }
-}
+
+} // Fin de la clase MainActivity
