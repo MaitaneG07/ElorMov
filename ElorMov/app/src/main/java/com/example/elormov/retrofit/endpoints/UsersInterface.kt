@@ -1,5 +1,6 @@
 package com.example.elormov.retrofit.endpoints
 
+import com.example.elormov.retrofit.entities.PerfilAlumnoDto
 import com.example.elormov.retrofit.entities.Users
 import com.example.elormov.retrofit.modelo.LoginRequest
 import com.example.elormov.retrofit.modelo.LoginResponse
@@ -18,4 +19,7 @@ interface UsersInterface {
 
     @POST("/api/users/login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
+
+    @GET("api/users/{id}/perfil-alumno")
+    suspend fun getPerfilAlumno(@Path("id") id: Int): Response<PerfilAlumnoDto>
 }

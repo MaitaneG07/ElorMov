@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 class PaginaPrincipalActivity : AppCompatActivity() {
 
-    // ✅ Ahora se recibe del login
     private var tipoDeUsuario: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +48,7 @@ class PaginaPrincipalActivity : AppCompatActivity() {
                 "USER_DATA recibido correctamente:\n\n" +
                         usuarioRecibido.toString()
         } else {
-            tvPrueba.text = "❌ USER_DATA NO recibido"
+            tvPrueba.text = "USER_DATA NO recibido"
         }
         //termina prueba
 

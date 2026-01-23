@@ -28,43 +28,78 @@ class PerfilActivity : AppCompatActivity() {
             finish()
         }
 
-        lifecycleScope.launch {
-            try {
-                // GET /api/users/{id}
-                val response = RetrofitClient.usersInterface.getUserById(userId.toLong())
+        // 🔒 Validación básica
+        if (userId == -1) {
+            tvDatosPerfil.text = "Error: usuario no válido"
+            return
+        }
 
-                if (response.isSuccessful) {
-                    val u = response.body()
+        if (tipoDeUsuario == 3) {
+            lifecycleScope.launch {
+                try {
+                    val response = RetrofitClient.usersInterface.getUserById(userId.toLong())
 
-                    if (u == null) {
-                        tvDatosPerfil.text = "Error: respuesta vacía"
-                        return@launch
+                    if (response.isSuccessful) {
+                        val u = response.body()
+                        if (u == null) {
+                            tvDatosPerfil.text = "Error: respuesta vacía"
+                            return@launch
+                        }
+
+                        val nombreCompleto = listOfNotNull(u.nombre, u.apellidos)
+                            .joinToString(" ")
+                            .trim()
+
+                        tvDatosPerfil.text =
+                            "${getString(R.string.profesor)}\n\n" +
+                                    "${if (nombreCompleto.isNotBlank()) nombreCompleto else "-"}\n\n" +
+                                    "${getString(R.string.email)}: ${u.email}\n" +
+                                    "${getString(R.string.direccion)}: ${u.direccion ?: "-"}\n" +
+                                    "${getString(R.string.telefono)} " + "1: " + "${u.telefono1 ?: "-"}\n" +
+                                    "${getString(R.string.telefono)} " + "2: " + "${u.telefono2 ?: "-"}"
+
+                    } else {
+                        tvDatosPerfil.text = "No se pudo cargar el perfil (HTTP ${response.code()})"
                     }
 
-                    val nombreCompleto = listOfNotNull(u.nombre, u.apellidos)
-                        .joinToString(" ")
-                        .trim()
-
-                    val email = u.email
-                    val direccion = u.direccion ?: "-"
-                    val tel1 = u.telefono1 ?: "-"
-                    val tel2 = u.telefono2 ?: "-"
-
-                    tvDatosPerfil.text =
-                        "Nombre: ${if (nombreCompleto.isNotBlank()) nombreCompleto else "-"}\n" +
-                                "Email: $email\n" +
-                                "Dirección: $direccion\n" +
-                                "Teléfono 1: $tel1\n" +
-                                "Teléfono 2: $tel2"
-
-                } else {
-                    tvDatosPerfil.text = "No se pudo cargar el perfil (HTTP ${response.code()})"
+                } catch (e: Exception) {
+                    tvDatosPerfil.text = "Error: ${e.message}"
+                    Toast.makeText(this@PerfilActivity, "Error al cargar el perfil", Toast.LENGTH_SHORT).show()
                 }
-
-            } catch (e: Exception) {
-                tvDatosPerfil.text = "Error: ${e.message}"
-                Toast.makeText(this@PerfilActivity, "Error al cargar el perfil", Toast.LENGTH_SHORT).show()
             }
+        }
+        // ✅ ALUMNO (tipo 4) -> mostrar datos académicos (GET /api/users/{id}/perfil-alumno)
+        else if (tipoDeUsuario == 4) {
+            lifecycleScope.launch {
+                try {
+                    val response = RetrofitClient.usersInterface.getPerfilAlumno(userId)
+
+                    if (response.isSuccessful) {
+                        val perfil = response.body()
+                        if (perfil == null) {
+                            tvDatosPerfil.text = "Error: respuesta vacía"
+                            return@launch
+                        }
+
+                        tvDatosPerfil.text =
+                            "${getString(R.string.alumno)}\n\n" +
+                                    "${perfil.nombre ?: "-"} ${perfil.apellidos ?: ""}\n\n" +
+                                    "${getString(R.string.email)}: ${perfil.email ?: "-"}\n" +
+                                    "${getString(R.string.ciclo)}: ${perfil.cicloNombre}\n" +
+                                    "${getString(R.string.curso)}: ${perfil.curso}º\n" +
+                                    "${getString(R.string.fechaMatricula)}: ${perfil.fechaMatricula ?: "-"}"
+
+                    } else {
+                        tvDatosPerfil.text = "No se pudo cargar el perfil alumno (HTTP ${response.code()})"
+                    }
+
+                } catch (e: Exception) {
+                    tvDatosPerfil.text = "Error: ${e.message}"
+                    Toast.makeText(this@PerfilActivity, "Error al cargar el perfil alumno", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            tvDatosPerfil.text = "Rol desconocido (TIPO_USUARIO=$tipoDeUsuario)"
         }
     }
 }
