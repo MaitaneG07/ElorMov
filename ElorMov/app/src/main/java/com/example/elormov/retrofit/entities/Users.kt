@@ -1,18 +1,54 @@
-package com.example.elormov.retrofit.entities
+import com.example.elormov.retrofit.entities.Tipos
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Users(
+    @SerializedName("id")
     val id: Int,
+
+    @SerializedName("email")
     val email: String,
+
+    @SerializedName("username")
     val username: String,
-    val password: String,
+
+    // OJO: Tu servidor envía la contraseña. 
+    // Por seguridad, idealmente no deberías enviarla de vuelta al cliente,
+    // pero como tu entidad la tiene, debemos recibirla o ignorarla.
+    @SerializedName("password")
+    val password: String?,
+
+    @SerializedName("nombre")
     val nombre: String?,
+
+    @SerializedName("apellidos")
     val apellidos: String?,
+
+    @SerializedName("dni")
     val dni: String?,
+
+    @SerializedName("direccion")
     val direccion: String?,
+
+    @SerializedName("telefono1")
     val telefono1: String?,
+
+    @SerializedName("telefono2")
     val telefono2: String?,
-    val tipos: Tipos?,
+
+    @SerializedName("argazkiaUrl") // Coincide con tu camelCase de Java
     val argazkiaUrl: String?,
+
+    // RELACIÓN: Aquí usamos la clase Tipos que creamos arriba
+    @SerializedName("tipos")
+    val tipos: Tipos?,
+
+    // FECHAS: Las recibimos como String para evitar errores.
+    // Llegarán como "2023-10-25T14:30:00"
+    @SerializedName("createdAt")
     val createdAt: String?,
+
+    @SerializedName("updatedAt")
     val updatedAt: String?
-)
+
+) : Serializable

@@ -1,7 +1,7 @@
 package com.example.elormov
 
+
 import RetrofitClient
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,208 +10,110 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.elormov.retrofit.modelo.LoginRequest
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private var cliente: RetrofitClient? = null
-
-    //ip para usar el servidor en el mismo pc
-    private val ipServidor = "10.0.2.2"
-    //ip del servidor de Giselle:
-    //private val ipServidor = "10.5.104.31"
-    //cambiar puerto cuando sea necesario
+    // Ajusta la IP según corresponda
+    private val ipServidor = "10.5.104.25"
     private val puerto = 9000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        RetrofitClient.init(ipServidor, puerto)
-
-        conectarAlServidor(null)
-
-        val inputUsuario = findViewById<TextInputEditText>(R.id.InputEmail)
-        val inputPassword = findViewById<TextInputEditText>(R.id.InputContrasenya)
-        cargarDatosLogin(inputUsuario, inputPassword)
-        val btnAceptar = findViewById<Button>(R.id.buttonMainAceptar)
-        val btnRecuperar = findViewById<Button>(R.id.buttonRecuperarPassword)
-
-        btnRecuperar.setOnClickListener {
-            popUpRecuperarContrasenna()
+        // Inicializamos Retrofit
+        try {
+            RetrofitClient.init(ipServidor, puerto)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error config: ${e.message}", Toast.LENGTH_SHORT).show()
         }
 
-        //para poder pasar a la siguiente ventana sin login
-        /*btnAceptar.setOnClickListener {
-            Toast.makeText(this, "Login desactivado (modo pruebas)", Toast.LENGTH_SHORT).show()
-            startActivity(Intent(this, PaginaPrincipalActivity::class.java))
-            finish()
-        }*/
+        // Referencias UI
+        // Aunque el ID del XML se llame InputEmail, aquí lo trataremos como username
+        val inputUsername = findViewById<TextInputEditText>(R.id.InputEmail)
+        val inputPassword = findViewById<TextInputEditText>(R.id.InputContrasenya)
+        val btnIniciarSesion = findViewById<Button>(R.id.buttonMainIniciarSesion)
+        val recuperarPassword = findViewById<TextView>(R.id.textRecuperarPassword)
 
-        //comentado para poder usarlo sin login
-        /*btnAceptar.setOnClickListener {
-            val usuario = inputUsuario.text.toString()
-            val password = inputPassword.text.toString()
+        // 1. Cargar datos previos (username/pass)
+        cargarDatosLogin(inputUsername, inputPassword)
 
-            if (usuario.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Por favor complete todos los campos", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+        recuperarPassword.setOnClickListener { popUpRecuperarContrasenna() }
 
-            if (cliente == null || !cliente!!.estaConectado()) {
-                Toast.makeText(this, "No hay conexión. Intente reconectar.", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            Thread {
-                try {
-                    val respuesta = cliente!!.enviarYRecibir("LOGIN:$usuario:$password")
-
-                    runOnUiThread {
-                        when (respuesta) {
-                            "OK" -> {
-                                Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this, PaginaPrincipalActivity::class.java))
-                                finish()
-                            }
-                            "ERROR" -> {
-                                Toast.makeText(this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-                            }
-                            else -> {
-                                Toast.makeText(this, "No se recibió respuesta del servidor", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-
-                } catch (e: Exception) {
-                    runOnUiThread {
-                        Toast.makeText(this, "Error al comunicarse con el servidor", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }.start()
-        }*/
-        btnAceptar.setOnClickListener {
-            val usuario = inputUsuario.text.toString().trim()
+        // 2. Click en Login
+        btnIniciarSesion.setOnClickListener {
+            val username = inputUsername.text.toString().trim()
             val password = inputPassword.text.toString().trim()
 
-            if (usuario.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Por favor complete todos los campos", Toast.LENGTH_SHORT).show()
+            if (username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Complete todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            lifecycleScope.launch {
-                try {
-                    // Trae todos los usuarios del backend
-                    val users = RetrofitClient.usersInterface.getAllUsers()
-
-                    // Busca por email O username y compara password
-                    val userOk = users.firstOrNull { u ->
-                        (u.email.equals(usuario, ignoreCase = true) ||
-                                u.username.equals(usuario, ignoreCase = true)) &&
-                                u.password == password
-                    }
-
-                    if (userOk != null) {
-                        guardarDatos(usuario, password)
-
-                        Toast.makeText(this@MainActivity, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
-
-                        // (Opcional) Pasar datos a la siguiente activity
-                        val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
-                        intent.putExtra("USER_ID", userOk.id)
-                        intent.putExtra("USER_NOMBRE", userOk.nombre ?: "")
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this@MainActivity, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
-                    }
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Error: ${e.javaClass.simpleName} - ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
+            realizarLogin(username, password)
         }
     }
 
-    private fun conectarAlServidor(txtEstado: TextView?) {
-        /*Thread {
-            cliente = RetrofitClient(ipServidor, puerto)
-            val conectado = cliente!!.conectar()
-
-            runOnUiThread {
-                if (conectado) {
-                    txtEstado?.text = "Estado: Conectado"
-                } else {
-                    txtEstado?.text = "Estado: Error de conexión"
-                    Toast.makeText(this, "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }.start()*/
-        //codigo de prueba
-        txtEstado?.text = "Estado: Conectando..."
-
+    private fun realizarLogin(username: String, pass: String) {
         lifecycleScope.launch {
             try {
-                // "Ping": si esto responde, hay conexión al backend
-                RetrofitClient.usersInterface.getAllUsers()
+                // CAMBIO: Ahora enviamos username en el objeto
+                val request = LoginRequest(username = username, password = pass)
 
-                txtEstado?.text = "Estado: Conectado"
+                val response = RetrofitClient.usersInterface.login(request)
+
+                if (response.isSuccessful) {
+                    val loginResponse = response.body()
+                    val usuarioObj = loginResponse?.user
+
+                    if (usuarioObj != null) {
+                        Toast.makeText(this@MainActivity, "Hola ${usuarioObj.nombre}", Toast.LENGTH_SHORT).show()
+
+                        // Guardamos username en lugar de email
+                        guardarDatos(username, pass)
+
+                        val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
+                        intent.putExtra("USER_ID", usuarioObj.id)
+                        startActivity(intent)
+                        finish()
+                    }
+                } else {
+                    Toast.makeText(this@MainActivity, "Credenciales incorrectas", Toast.LENGTH_SHORT).show()
+                }
+
             } catch (e: Exception) {
-                txtEstado?.text = "Estado: Error de conexión"
-                Toast.makeText(this@MainActivity, "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+                Toast.makeText(this@MainActivity, "Error conexión: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun popUpRecuperarContrasenna() {
-        val inputEmail = findViewById<TextInputEditText>(R.id.InputEmail)
-        val email = inputEmail.text.toString()
-
-        val mensaje = if (email.isNotEmpty()) {
-            "$email, ¿quieres recuperar tu contraseña?"
-        } else {
-            "¿Quieres recuperar tu contraseña?"
-        }
-
-        androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("Recuperar contraseña")
-            .setMessage(mensaje)
-            .setPositiveButton("Sí") { _, _ ->
-                Toast.makeText(this, "Se enviará un nuevo password", Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton("No") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
-
-    @SuppressLint("UseKtx")
-    private fun guardarDatos(email: String, password: String) {
+    // Guardar en Preferencias (Username)
+    private fun guardarDatos(username: String, password: String) {
         val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
         with(prefs.edit()) {
-            putString("email", email)
+            putString("username", username) // Clave cambiada a 'username'
             putString("password", password)
             putBoolean("recordar", true)
             apply()
         }
     }
 
-    private fun cargarDatosLogin(
-        inputUsuario: TextInputEditText,
-        inputPassword: TextInputEditText
-    ) {
+    // Cargar de Preferencias
+    private fun cargarDatosLogin(inputUser: TextInputEditText, inputPass: TextInputEditText) {
         val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
-
         val recordar = prefs.getBoolean("recordar", false)
         if (recordar) {
-            inputUsuario.setText(prefs.getString("email", ""))
-            inputPassword.setText(prefs.getString("password", ""))
+            // Leemos la clave 'username'
+            inputUser.setText(prefs.getString("username", ""))
+            inputPass.setText(prefs.getString("password", ""))
         }
+    }
+
+    private fun popUpRecuperarContrasenna() {
+        // ... (Tu código del popup igual)
     }
 }
