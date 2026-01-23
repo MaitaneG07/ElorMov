@@ -1,5 +1,7 @@
 package com.example.elormov
 
+import RetrofitClient
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,11 +19,12 @@ class MainActivity : AppCompatActivity() {
     private var cliente: RetrofitClient? = null
 
     //ip para usar el servidor en el mismo pc
-   // private val ipServidor = "10.0.2.2"
+    // private val ipServidor = "10.0.2.2"
     //ip del servidor de Akira:
     //private val ipServidor = "10.5.104.32"
     //ip del servidor de Giselle:
     private val ipServidor = "10.5.104.31"
+
     //ip del servidor de Maitane:
     //private val ipServidor = "10.5.104.25"
     //cambiar puerto cuando sea necesario
@@ -41,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         // 2. Referencias UI
         val inputUsername = findViewById<TextInputEditText>(R.id.InputEmail) // XML ID se mantiene
         val inputPassword = findViewById<TextInputEditText>(R.id.InputContrasenya)
-        cargarDatosLogin(inputUsuario, inputPassword)
+        cargarDatosLogin(inputUsername, inputPassword)
 
         val btnIniciarSesion = findViewById<Button>(R.id.buttonMainIniciarSesion)
         val recuperarPassword = findViewById<TextView>(R.id.textRecuperarPassword)
@@ -60,11 +63,11 @@ class MainActivity : AppCompatActivity() {
             val passwordTexto = inputPassword.text.toString().trim()
 
             if (usernameTexto.isEmpty() || passwordTexto.isEmpty()) {
-                Toast.makeText(this, "Por favor rellena todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor rellena todos los campos", Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
-
-            val request = LoginRequest(username = usuario, password = password)
+            val request = LoginRequest(username = usernameTexto, password = passwordTexto)
 
             lifecycleScope.launch {
                 try {
@@ -75,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                         val userOk = loginResponse?.user
 
                         if (userOk != null) {
-                            guardarDatos(usuario, password)
+                            guardarDatos(usernameTexto, passwordTexto)
 
                             Toast.makeText(
                                 this@MainActivity,
@@ -85,11 +88,12 @@ class MainActivity : AppCompatActivity() {
 
                             val tipoId = userOk.tipos?.id ?: -1
 
-                            val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
+                            val intent =
+                                Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
                             intent.putExtra("USER_ID", userOk.id)
                             intent.putExtra("USER_NOMBRE", userOk.nombre ?: "")
                             intent.putExtra("TIPO_ID", tipoId)
-                            intent.putExtra("USER_DATA", usuario)
+                            intent.putExtra("USER_DATA", usernameTexto)
                             startActivity(intent)
                             finish()
                         } else {
@@ -111,7 +115,11 @@ class MainActivity : AppCompatActivity() {
                 } catch (e: Exception) {
                     // Error de conexión
                     e.printStackTrace()
-                    Toast.makeText(this@MainActivity, "Fallo de conexión: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Fallo de conexión: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -128,7 +136,11 @@ class MainActivity : AppCompatActivity() {
                 txtEstado?.text = "Estado: Conectado"
             } catch (e: Exception) {
                 txtEstado?.text = "Estado: Error de conexión"
-                Toast.makeText(this@MainActivity, "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "No se pudo conectar con el servidor",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -156,7 +168,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("UseKtx")
-    private fun guardarDatos(email: String, password: String) {
+    private fun guardarDatos(username: String, password: String) {
         val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
         with(prefs.edit()) {
             putString("username", username)
@@ -174,10 +186,6 @@ class MainActivity : AppCompatActivity() {
             inputUser.setText(prefs.getString("username", ""))
             inputPass.setText(prefs.getString("password", ""))
         }
-    }
-
-    private fun popUpRecuperarContrasenna() {
-        Toast.makeText(this, "Funcionalidad de recuperar contraseña aquí", Toast.LENGTH_SHORT).show()
     }
 
 } // Fin de la clase MainActivity

@@ -6,70 +6,72 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.elormov.ConsultaAlumnosActivity
+import com.example.elormov.ConsultaHorariosProfesorActivity
+import com.example.elormov.MainActivity
+import com.example.elormov.PerfilActivity
+import com.example.elormov.R
+import com.example.elormov.R.*
+import com.example.elormov.ReunionesActivity
 
 class PaginaPrincipalActivity : AppCompatActivity() {
 
-    // ✅ Ahora se recibe del login
-    private var tipoDeUsuario: Int = -1
-
-    // ✅ Ahora se recibe del login
     private var tipoDeUsuario: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pagina_principal)
+        setContentView(layout.activity_pagina_principal)
 
-        val nombre = intent.getStringExtra("USER_NOMBRE") ?: ""
+        // Recepción de datos
+        val nombre = intent.getStringExtra("USER_NOMBRE") ?: "Usuario"
         val userId = intent.getIntExtra("USER_ID", -1)
-
         tipoDeUsuario = intent.getIntExtra("TIPO_ID", -1)
 
-        val botonPerfil: ImageButton = findViewById(R.id.btnPerfil)
-        val botonConsultar: Button = findViewById(R.id.buttonConsultarPP)
-        val botonSalir: Button = findViewById(R.id.buttonSalirPP)
-        val botonConsultarReuniones: Button = findViewById(R.id.buttonConsultarReunionesPP)
-        val nombreUsuario: TextView = findViewById(R.id.textViewNombreUsuarioPP)
-        val tvPrueba: TextView = findViewById(R.id.textViewPrueba)
+        val recyclerView = findViewById<RecyclerView>(id.recycleViewPaginaPrincipal)
+        val numberOfColumns = 6
+        recyclerView.layoutManager = GridLayoutManager(this, numberOfColumns)
 
-        nombreUsuario.text = "$nombre".trim()
+        val botonPerfil: ImageButton = findViewById(id.btnPerfil)
+        val botonConsultar: Button = findViewById(id.buttonConsultarPP)
+        val botonSalir: Button = findViewById(id.buttonSalirPP)
+        val botonConsultarReuniones: Button = findViewById(id.buttonConsultarReunionesPP)
+        val nombreUsuario: TextView = findViewById(id.textViewNombreUsuarioPP)
 
-        //dependiendo de si entra un alumno o un profesor
-        if (tipoDeUsuario == 4) {
-            // Profesor
-            botonConsultar.setText(R.string.boton_consultarAlumnos)
+        nombreUsuario.text = nombre.trim()
 
-        } else if (tipoDeUsuario == 3) {
-            // Alumno
-            botonConsultar.setText(R.string.boton_consultarHorarioProfesor)
+        // Configuración de interfaz según tipo
+        when (tipoDeUsuario) {
+            3 -> botonConsultar.setText(string.boton_consultarAlumnos)
+            4 -> botonConsultar.setText(string.boton_consultarHorarioProfesor)
         }
 
-        //empieza la prueba
-        val usuarioRecibido = intent.getSerializableExtra("USER_DATA")
-
-        if (usuarioRecibido != null) {
-            tvPrueba.text =
-                "USER_DATA recibido correctamente:\n\n" +
-                        usuarioRecibido.toString()
+        // Prueba de objeto Serializable
+        /*val usuarioRecibido = intent.getSerializableExtra("USER_DATA")
+        tvPrueba.text = if (usuarioRecibido != null) {
+            "USER_DATA recibido:\n$usuarioRecibido"
         } else {
-            tvPrueba.text = "❌ USER_DATA NO recibido"
-        }
-        //termina prueba
+            "❌ USER_DATA NO recibido"
+        }*/
 
+
+        // Eventos
         botonPerfil.setOnClickListener {
-            val intent = Intent(this, PerfilActivity::class.java)
-            intent.putExtra("USER_ID", userId)
-            intent.putExtra("TIPO_USUARIO", tipoDeUsuario)
+            val intent = Intent(this, PerfilActivity::class.java).apply {
+                putExtra("USER_ID", userId)
+                putExtra("TIPO_USUARIO", tipoDeUsuario)
+            }
             startActivity(intent)
         }
 
         botonConsultar.setOnClickListener {
-            if (tipoDeUsuario == 3) {
-                startActivity(Intent(this, ConsultaAlumnosActivity::class.java))
-            } else if (tipoDeUsuario == 4) {
-                startActivity(Intent(this, ConsultaHorariosProfesorActivity::class.java))
+            val destino = when (tipoDeUsuario) {
+                3 -> ConsultaAlumnosActivity::class.java
+                4 -> ConsultaHorariosProfesorActivity::class.java
+                else -> null
             }
+            destino?.let { startActivity(Intent(this, it)) }
         }
 
         botonConsultarReuniones.setOnClickListener {
@@ -77,8 +79,44 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         }
 
         botonSalir.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
             finish()
         }
     }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val row = position / 6    // Fila actual
+        val column = position % 6 // Columna actual (0 a 5)
+
+        when {
+            // Celda superior izquierda (vacía o título)
+            row == 0 && column == 0 -> {
+                holder.textView.text = ""
+            }
+
+            // Encabezado Horizontal: Días de la semana (Fila 0)
+            row == 0 && column > 0 -> {
+                val dias = listOf("Lun", "Mar", "Mié", "Jue", "Vie")
+                holder.textView.text = dias[column - 1]
+                holder.itemView.setBackgroundColor(Color.LTGRAY) // Opcional: Estilo encabezado
+            }
+
+            // Encabezado Vertical: Números 1 al 7 (Columna 0)
+            row > 0 && column == 0 -> {
+                holder.textView.text = row.toString()
+                holder.itemView.setBackgroundColor(Color.LTGRAY)
+            }
+
+            // Celdas de Contenido: Datos del servidor
+            else -> {
+                // Aquí buscas en tu lista de horarios
+                // El índice de tus datos sería algo como: datos[row - 1][column - 1]
+                holder.textView.text = "Cita"
+            }
+        }
+    }
+
+    override fun getItemCount(): Int = 6 * 8 // 6 columnas * (1 encabezado + 7 filas) = 48 celdas
 }

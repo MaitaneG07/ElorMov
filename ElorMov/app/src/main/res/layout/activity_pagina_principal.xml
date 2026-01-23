@@ -11,20 +11,62 @@
         android:id="@+id/btnPerfil"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Perfil"
         android:src="@drawable/icono_pefil"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.955"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewNombreUsuarioPP"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:text="NombreUsuario"
+        android:textColor="#008aab"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnPerfil"
+        app:layout_constraintEnd_toStartOf="@+id/btnPerfil"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.023" />
+        app:layout_constraintTop_toTopOf="@+id/btnPerfil" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleViewPaginaPrincipal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnPerfil" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6" /> <Button
+    android:id="@+id/buttonConsultarPP"
+    android:layout_width="316dp"
+    android:layout_height="wrap_content"
+    android:backgroundTint="#211261"
+    android:text="@string/boton_consultarEstandar"
+    app:layout_constraintBottom_toTopOf="@+id/buttonConsultarReunionesPP"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/guideline"
+    app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/buttonConsultarReunionesPP"
         android:layout_width="316dp"
-        android:layout_height="46dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:backgroundTint="#211261"
         android:text="@string/boton_consultarReuniones"
         app:layout_constraintBottom_toTopOf="@+id/buttonSalirPP"
@@ -33,61 +75,15 @@
         app:layout_constraintTop_toBottomOf="@+id/buttonConsultarPP" />
 
     <Button
-        android:id="@+id/buttonConsultarPP"
-        android:layout_width="316dp"
-        android:layout_height="46dp"
-        android:backgroundTint="#211261"
-        android:text="@string/boton_consultarEstandar"
-        app:layout_constraintBottom_toTopOf="@+id/buttonConsultarReunionesPP"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-    <Button
         android:id="@+id/buttonSalirPP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#008aab"
         android:text="@string/boton_salir"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonConsultarReunionesPP" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="482dp" />
-
-    <TextView
-        android:id="@+id/textViewNombreUsuarioPP"
-        android:layout_width="269dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:text="NombreUsuario"
-        android:textAlignment="center"
-        android:textColor="#008aab"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.338"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.064" />
-
-    <TextView
-        android:id="@+id/textViewPrueba"
-        android:layout_width="290dp"
-        android:layout_height="253dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.361" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
