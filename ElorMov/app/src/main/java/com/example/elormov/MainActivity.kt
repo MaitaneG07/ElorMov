@@ -76,13 +76,13 @@ class MainActivity : AppCompatActivity() {
 
                             when (tipoId) {
                                 4 -> { // ALUMNO
-                                    val intent = Intent(this@MainActivity, AlumnoActivity::class.java)
+                                    val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
                                     intent.putExtra("USER_DATA", usuario)
                                     startActivity(intent)
                                     finish()
                                 }
                                 3 -> { // PROFESOR
-                                    val intent = Intent(this@MainActivity, ProfesorActivity::class.java)
+                                    val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
                                     intent.putExtra("USER_DATA", usuario)
                                     startActivity(intent)
                                     finish()

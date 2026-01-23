@@ -63,14 +63,6 @@
             android:name=".MainActivity"
             android:exported="false">
         </activity>
-        <activity
-            android:name=".AlumnoActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".ProfesorActivity"
-            android:exported="false">
-        </activity>
     </application>
 
 </manifest>
