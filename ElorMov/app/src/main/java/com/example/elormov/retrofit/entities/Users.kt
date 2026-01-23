@@ -1,3 +1,5 @@
+import com.example.elormov.retrofit.entities.Matriculaciones
+import com.example.elormov.retrofit.entities.Reuniones
 import com.example.elormov.retrofit.entities.Tipos
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -12,7 +14,7 @@ data class Users(
     @SerializedName("username")
     val username: String,
 
-    // OJO: Tu servidor envía la contraseña. 
+    // OJO: Tu servidor envía la contraseña.
     // Por seguridad, idealmente no deberías enviarla de vuelta al cliente,
     // pero como tu entidad la tiene, debemos recibirla o ignorarla.
     @SerializedName("password")
@@ -49,6 +51,15 @@ data class Users(
     val createdAt: String?,
 
     @SerializedName("updatedAt")
-    val updatedAt: String?
+    val updatedAt: String?,
+
+// Lista de matriculaciones (Solo vendrá llena si es Alumno y el backend lo envía)
+    @SerializedName("matriculaciones")
+    val matriculaciones: List<Matriculaciones>?,
+
+// Lista de reuniones (Solo vendrá llena si es Profesor y el backend lo envía)
+// Nota: en tu SQL la tabla se llama 'reuniones', el JSON debería coincidir
+    @SerializedName("reuniones")
+ val reuniones: List<Reuniones>?
 
 ) : Serializable

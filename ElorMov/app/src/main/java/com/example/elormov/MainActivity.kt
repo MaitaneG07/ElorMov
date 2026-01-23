@@ -17,7 +17,10 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     // Ajusta la IP según corresponda
-    private val ipServidor = "10.5.104.25"
+    //private val ipServidor = "10.5.104.25"
+
+    //ip para usar el servidor en el mismo pc
+    private val ipServidor = "10.0.2.2"
     private val puerto = 9000
 
     override fun onCreate(savedInstanceState: Bundle?) {
