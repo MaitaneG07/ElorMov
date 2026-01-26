@@ -12,6 +12,17 @@
     <string name="perfilAlumnno">PERFIL ALUMNO</string>
     <string name="perfil">PERFIL</string>
 
+    //datos
+    <string name="profesor">PROFESOR</string>
+    <string name="alumno">ALUMNO</string>
+    <string name="nombre">Nombre</string>
+    <string name="email">Email</string>
+    <string name="direccion">Dirección</string>
+    <string name="telefono">Teléfono</string>
+    <string name="ciclo">Ciclo</string>
+    <string name="curso">Curso</string>
+    <string name="fechaMatricula">Fecha matrícula</string>
+
     //inputs
     <string name="introducir_usuario">Introducir Usuario</string>
     <string name="introducir_password">Introducir Contraseña</string>
