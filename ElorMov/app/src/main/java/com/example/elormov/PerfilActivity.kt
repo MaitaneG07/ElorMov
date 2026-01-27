@@ -14,11 +14,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+import com.example.elormov.config.AppConfig
 
 class PerfilActivity : AppCompatActivity() {
 
     private lateinit var imagenSacada: ImageView
+    private var userId: Int = -1
+    private var tipoDeUsuario: Int = -1
 
     private val pedirPermisoCamara =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -35,6 +43,8 @@ class PerfilActivity : AppCompatActivity() {
                 val bmp = result.data?.extras?.get("data") as? Bitmap
                 if (bmp != null) {
                     imagenSacada.setImageBitmap(bmp)
+
+                    subirImagenAlServidor(bmp)
                 }
             }
         }
@@ -45,8 +55,8 @@ class PerfilActivity : AppCompatActivity() {
 
         //recibo el tipo de usuario de la ventana anterior
         //si es profesor muestra unas cosas y si el alumno otras
-        val tipoDeUsuario = intent.getIntExtra("TIPO_USUARIO", -1)
-        val userId = intent.getIntExtra("USER_ID", -1)
+        tipoDeUsuario = intent.getIntExtra("TIPO_USUARIO", -1)
+        userId = intent.getIntExtra("USER_ID", -1)
 
         val botonVolver: Button = findViewById(R.id.buttonVolverPerfil)
         val tvDatosPerfil: TextView = findViewById(R.id.textViewDatosPerfil)
@@ -99,6 +109,16 @@ class PerfilActivity : AppCompatActivity() {
                                     "${getString(R.string.telefono)} 1: ${u.telefono1 ?: "-"}\n" +
                                     "${getString(R.string.telefono)} 2: ${u.telefono2 ?: "-"}"
 
+                        val fotoUrl = u.argazkiaUrl
+                        if (!fotoUrl.isNullOrBlank()) {
+                            Glide.with(this@PerfilActivity)
+                                .load(AppConfig.BASE_URL + fotoUrl)
+                                .placeholder(R.drawable.perfilsinimagen)
+                                .into(imagenSacada)
+                        } else {
+                            imagenSacada.setImageResource(R.drawable.perfilsinimagen)
+                        }
+
                     } else {
                         tvDatosPerfil.text =
                             "No se pudo cargar el perfil (HTTP ${response.code()})"
@@ -133,6 +153,23 @@ class PerfilActivity : AppCompatActivity() {
                                     "${getString(R.string.curso)}: ${perfil.curso}º\n" +
                                     "${getString(R.string.fechaMatricula)}: ${perfil.fechaMatricula ?: "-"}"
 
+                        val respUser = RetrofitClient.usersInterface.getUserById(userId.toLong())
+                        if (respUser.isSuccessful) {
+                            val u = respUser.body()
+                            val fotoUrl = u?.argazkiaUrl
+
+                            if (!fotoUrl.isNullOrBlank()) {
+                                Glide.with(this@PerfilActivity)
+                                    .load(AppConfig.BASE_URL + fotoUrl)
+                                    .placeholder(R.drawable.perfilsinimagen)
+                                    .into(imagenSacada)
+                            } else {
+                                imagenSacada.setImageResource(R.drawable.perfilsinimagen)
+                            }
+                        } else {
+                            imagenSacada.setImageResource(R.drawable.perfilsinimagen)
+                        }
+
                     } else {
                         tvDatosPerfil.text =
                             "No se pudo cargar el perfil alumno (HTTP ${response.code()})"
@@ -150,6 +187,7 @@ class PerfilActivity : AppCompatActivity() {
         } else {
             tvDatosPerfil.text = "Rol desconocido (TIPO_USUARIO=$tipoDeUsuario)"
         }
+
     }
 
     private fun abrirCamara() {
@@ -158,6 +196,33 @@ class PerfilActivity : AppCompatActivity() {
             abrirCamaraLauncher.launch(intent)
         } else {
             Toast.makeText(this, "No hay app de cámara disponible", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun subirImagenAlServidor(bitmap: Bitmap) {
+        lifecycleScope.launch {
+            try {
+                val file = File(cacheDir, "perfil_${System.currentTimeMillis()}.jpg")
+                file.outputStream().use {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, it)
+                }
+
+                val reqBody = file
+                    .asRequestBody("image/*".toMediaTypeOrNull())
+
+                val part = MultipartBody.Part
+                    .createFormData("file", file.name, reqBody)
+
+                val response = RetrofitClient.usersInterface
+                    .uploadFoto(userId.toLong(), part)
+
+                if (!response.isSuccessful) {
+                    Toast.makeText(this@PerfilActivity, "Error subiendo imagen", Toast.LENGTH_SHORT).show()
+                }
+
+            } catch (e: Exception) {
+                Toast.makeText(this@PerfilActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 }
