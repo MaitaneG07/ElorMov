@@ -86,37 +86,4 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val row = position / 6    // Fila actual
-        val column = position % 6 // Columna actual (0 a 5)
-
-        when {
-            // Celda superior izquierda (vacía o título)
-            row == 0 && column == 0 -> {
-                holder.textView.text = ""
-            }
-
-            // Encabezado Horizontal: Días de la semana (Fila 0)
-            row == 0 && column > 0 -> {
-                val dias = listOf("Lun", "Mar", "Mié", "Jue", "Vie")
-                holder.textView.text = dias[column - 1]
-                holder.itemView.setBackgroundColor(Color.LTGRAY) // Opcional: Estilo encabezado
-            }
-
-            // Encabezado Vertical: Números 1 al 7 (Columna 0)
-            row > 0 && column == 0 -> {
-                holder.textView.text = row.toString()
-                holder.itemView.setBackgroundColor(Color.LTGRAY)
-            }
-
-            // Celdas de Contenido: Datos del servidor
-            else -> {
-                // Aquí buscas en tu lista de horarios
-                // El índice de tus datos sería algo como: datos[row - 1][column - 1]
-                holder.textView.text = "Cita"
-            }
-        }
-    }
-
-    override fun getItemCount(): Int = 6 * 8 // 6 columnas * (1 encabezado + 7 filas) = 48 celdas
 }
