@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ElorMov</string>
+
+    <!-- texts -->
+    <string name="usuario">User</string>
+    <string name="password">Password</string>
+    <string name="recuperarPasswordPregunta">Do you want to recover your password?</string>
+    <string name="recuperarPassword">Recover password</string>
+    <string name="enviarNuevoPassword">A new password has been sent to your email</string>
+    <string name="si">YES</string>
+    <string name="no">NO</string>
+    <string name="perfil">PROFILE</string>
+
+    <!-- data -->
+    <string name="profesor">TEACHER</string>
+    <string name="alumno">STUDENT</string>
+    <string name="nombre">Name</string>
+    <string name="email">Email</string>
+    <string name="direccion">Address</string>
+    <string name="telefono">Phone</string>
+    <string name="ciclo">Course</string>
+    <string name="curso">Year</string>
+    <string name="fechaMatricula">Enrollment date</string>
+
+    <!-- inputs -->
+    <string name="introducir_usuario">Enter user</string>
+    <string name="introducir_password">Enter password</string>
+
+    <!-- buttons -->
+    <string name="boton_aceptar">Accept</string>
+    <string name="boton_recuperar_password"><u>Forgot your password?</u></string>
+    <string name="boton_iniciar_sesion">Log in</string>
+    <string name="boton_salir">Exit</string>
+    <string name="boton_volver">Back</string>
+    <string name="boton_consultarEstandar">Consult</string>
+    <string name="boton_consultarHorarioProfesor">Consult teacher schedule</string>
+    <string name="boton_consultarAlumnos">Consult students</string>
+    <string name="boton_consultarReuniones">Consult meetings</string>
+    <string name="boton_crear">Create</string>
+    <string name="boton_cancelar">Cancel</string>
+    <string name="annadir_imagen">Add image</string>
+</resources>
