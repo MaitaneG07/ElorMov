@@ -6,8 +6,10 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -62,6 +64,17 @@ class PerfilActivity : AppCompatActivity() {
         val tvDatosPerfil: TextView = findViewById(R.id.textViewDatosPerfil)
         val botonCamara: Button = findViewById(R.id.buttonAnnadirImagen)
         imagenSacada = findViewById(R.id.imageViewPerfil)
+        val spinnerIdioma : Spinner = findViewById(R.id.spinnerIdioma)
+        val idiomas = listOf("ES", "EUS", "ENG")
+
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            idiomas
+        )
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerIdioma.adapter = adapter
 
         botonCamara.setOnClickListener {
             val granted = ContextCompat.checkSelfPermission(
@@ -225,4 +238,15 @@ class PerfilActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun setLang(lang: String) {
+        val locale = java.util.Locale(lang) // "en" para inglés, "es" para español, "eus" para euskera
+        java.util.Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+
+        recreate()
+    }
+
 }
