@@ -57,6 +57,8 @@
         android:text="NombreUsuario"
         android:textAlignment="center"
         android:textColor="#008aab"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toStartOf="@+id/btnPerfil"
         app:layout_constraintHorizontal_bias="0.5"
