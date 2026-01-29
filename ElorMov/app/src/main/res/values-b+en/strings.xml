@@ -11,6 +11,12 @@
     <string name="si">YES</string>
     <string name="no">NO</string>
     <string name="perfil">PROFILE</string>
+    <string name="lunes">M</string>
+    <string name="martes">T</string>
+    <string name="miercoles">W</string>
+    <string name="jueves">T</string>
+    <string name="viernes">F</string>
+    <string name="hora">Time</string>
 
     <!-- data -->
     <string name="profesor">TEACHER</string>

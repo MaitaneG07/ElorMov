@@ -9,6 +9,12 @@
     <string name="si">SI</string>
     <string name="no">NO</string>
     <string name="perfil">PERFIL</string>
+    <string name="lunes">L</string>
+    <string name="martes">M</string>
+    <string name="miercoles">X</string>
+    <string name="jueves">J</string>
+    <string name="viernes">V</string>
+    <string name="hora">Hora</string>
 
     //datos
     <string name="profesor">PROFESOR</string>
