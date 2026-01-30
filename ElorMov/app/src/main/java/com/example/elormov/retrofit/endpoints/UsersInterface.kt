@@ -1,5 +1,6 @@
 package com.example.elormov.retrofit.endpoints
 
+import com.example.elormov.retrofit.entities.AlumnoTablaDto
 import com.example.elormov.retrofit.entities.PerfilAlumnoDto
 import com.example.elormov.retrofit.entities.Users
 import com.example.elormov.retrofit.modelo.LoginRequest
@@ -32,4 +33,7 @@ interface UsersInterface {
         @Path("id") id: Long,
         @Part file: MultipartBody.Part
     ): Response<Map<String, Any>>
+
+    @GET("api/users/alumnos/tabla")
+    suspend fun getAlumnosTabla(): List<AlumnoTablaDto>
 }

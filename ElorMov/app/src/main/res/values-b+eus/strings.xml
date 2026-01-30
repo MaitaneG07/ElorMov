@@ -14,13 +14,16 @@
     <string name="lunes">AL</string>
     <string name="martes">AR</string>
     <string name="miercoles">AZ</string>
+    <string name="jueves">OS</string>
     <string name="viernes">OR</string>
     <string name="hora">Ordua</string>
+    <string name="alumnos">IKASLEAK</string>
 
     <!-- data -->
     <string name="profesor">IRAKASLEA</string>
     <string name="alumno">IKASLEA</string>
     <string name="nombre">Izena</string>
+    <string name="apellidos">Abizenak</string>
     <string name="email">Emaila</string>
     <string name="direccion">Helbidea</string>
     <string name="telefono">Telefonoa</string>

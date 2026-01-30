@@ -17,11 +17,13 @@
     <string name="jueves">T</string>
     <string name="viernes">F</string>
     <string name="hora">Time</string>
+    <string name="alumnos">STUDENTS</string>
 
     <!-- data -->
     <string name="profesor">TEACHER</string>
     <string name="alumno">STUDENT</string>
     <string name="nombre">Name</string>
+    <string name="apellidos">Last Name</string>
     <string name="email">Email</string>
     <string name="direccion">Address</string>
     <string name="telefono">Phone</string>

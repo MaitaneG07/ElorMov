@@ -15,11 +15,13 @@
     <string name="jueves">J</string>
     <string name="viernes">V</string>
     <string name="hora">Hora</string>
+    <string name="alumnos">ALUMNOS</string>
 
     //datos
     <string name="profesor">PROFESOR</string>
     <string name="alumno">ALUMNO</string>
     <string name="nombre">Nombre</string>
+    <string name="apellidos">Apellidos</string>
     <string name="email">Email</string>
     <string name="direccion">Dirección</string>
     <string name="telefono">Teléfono</string>
