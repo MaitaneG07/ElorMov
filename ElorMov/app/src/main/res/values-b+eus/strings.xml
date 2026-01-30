@@ -11,6 +11,11 @@
     <string name="si">BAI</string>
     <string name="no">EZ</string>
     <string name="perfil">PROFILA</string>
+    <string name="lunes">AL</string>
+    <string name="martes">AR</string>
+    <string name="miercoles">AZ</string>
+    <string name="viernes">OR</string>
+    <string name="hora">Ordua</string>
 
     <!-- data -->
     <string name="profesor">IRAKASLEA</string>
