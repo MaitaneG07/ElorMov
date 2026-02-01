@@ -18,6 +18,7 @@
     <string name="viernes">F</string>
     <string name="hora">Time</string>
     <string name="alumnos">STUDENTS</string>
+    <string name="profesores">TEACHERS</string>
 
     <!-- data -->
     <string name="profesor">TEACHER</string>

@@ -2,6 +2,7 @@ package com.example.elormov.retrofit.endpoints
 
 import com.example.elormov.retrofit.entities.AlumnoTablaDto
 import com.example.elormov.retrofit.entities.PerfilAlumnoDto
+import com.example.elormov.retrofit.entities.ProfesorTablaDto
 import com.example.elormov.retrofit.entities.Users
 import com.example.elormov.retrofit.modelo.LoginRequest
 import com.example.elormov.retrofit.modelo.LoginResponse
@@ -36,4 +37,8 @@ interface UsersInterface {
 
     @GET("api/users/alumnos/tabla")
     suspend fun getAlumnosTabla(): List<AlumnoTablaDto>
+
+    @GET("api/users/profesores/tabla")
+    suspend fun getProfesoresTabla(): List<ProfesorTablaDto>
+
 }
