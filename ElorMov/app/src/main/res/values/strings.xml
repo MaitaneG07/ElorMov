@@ -36,6 +36,7 @@
     //botones
     <string name="boton_aceptar">Aceptar</string>
     <string name="boton_recuperar_password"><u>¿Has olvidado tu contraseña?</u></string>
+    <string name="boton_recuperar"><u>Recuperar</u></string>
     <string name="boton_iniciar_sesion">Iniciar Sesión</string>
     <string name="boton_salir">Salir</string>
     <string name="boton_volver">Volver</string>

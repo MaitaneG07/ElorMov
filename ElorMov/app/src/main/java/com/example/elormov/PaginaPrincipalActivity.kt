@@ -25,7 +25,7 @@ class PaginaPrincipalActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(layout.activity_pagina_principal)
+        setContentView(R.layout.activity_pagina_principal)
 
         // Recepción de datos
         val nombre = intent.getStringExtra("USER_NOMBRE") ?: "Usuario"

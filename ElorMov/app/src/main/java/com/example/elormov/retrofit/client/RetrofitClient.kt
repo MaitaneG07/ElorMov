@@ -1,4 +1,5 @@
 import com.example.elormov.retrofit.endpoints.HorariosInterface
+import com.example.elormov.retrofit.endpoints.PasswordInterface
 import com.example.elormov.retrofit.endpoints.UsersInterface
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,6 +17,8 @@ object RetrofitClient {
     lateinit var usersInterface: UsersInterface
     lateinit var horariosInterface: HorariosInterface
 
+    lateinit var passwordInterface: PasswordInterface
+
     fun init(ipServidor: String, puerto: Int) {
         retrofit = Retrofit.Builder()
             .baseUrl("http://$ipServidor:$puerto/")
@@ -24,6 +27,7 @@ object RetrofitClient {
 
         usersInterface = retrofit!!.create(UsersInterface::class.java)
         horariosInterface = retrofit!!.create(HorariosInterface::class.java)
+        passwordInterface = retrofit!!.create(PasswordInterface::class.java)
     }
 }
 

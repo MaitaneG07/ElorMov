@@ -35,6 +35,7 @@
     <!-- buttons -->
     <string name="boton_aceptar">Onartu</string>
     <string name="boton_recuperar_password"><u>Pasahitza ahaztu duzu?</u></string>
+    <string name="boton_recuperar"><u>Berreskuratu</u></string>
     <string name="boton_iniciar_sesion">Saioa hasi</string>
     <string name="boton_salir">Irten</string>
     <string name="boton_volver">Itzuli</string>

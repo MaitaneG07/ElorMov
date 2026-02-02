@@ -5,14 +5,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.elormov.retrofit.endpoints.PasswordInterface
 import com.example.elormov.retrofit.modelo.LoginRequest
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -142,26 +147,78 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
     private fun popUpRecuperarContrasenna() {
         val inputEmail = findViewById<TextInputEditText>(R.id.InputEmail)
-        val email = inputEmail.text.toString()
+        val username = inputEmail.text.toString()
 
-        val mensaje = if (email.isNotEmpty()) {
-            "$email, ¿quieres recuperar tu contraseña?"
-        } else {
-            "¿Quieres recuperar tu contraseña?"
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Por favor, ingresa tu username", Toast.LENGTH_SHORT).show()
+            return
         }
+
+        val mensaje = "$username, ¿quieres recuperar tu contraseña?"
 
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Recuperar contraseña")
             .setMessage(mensaje)
             .setPositiveButton("Sí") { _, _ ->
-                Toast.makeText(this, "Se enviará un nuevo password", Toast.LENGTH_SHORT).show()
+                recuperarPassword(username)
             }
             .setNegativeButton("No") { dialog, _ ->
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun recuperarPassword(username: String) {
+        // Mostrar progress dialog
+        val progressDialog = android.app.ProgressDialog(this)
+        progressDialog.setMessage("Enviando nueva contraseña...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
+        // Hacer la petición al servidor
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val request = mapOf("username" to username)
+                val response = RetrofitClient.passwordInterface.recuperarPassword(request)
+
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            this@MainActivity, // Cambia por el nombre de tu Activity
+                            "Se ha enviado una nueva contraseña a tu email registrado",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        val errorMsg = when (response.code()) {
+                            404 -> "Usuario no encontrado"
+                            400 -> "Username inválido"
+                            else -> "Error al procesar la solicitud"
+                        }
+                        Toast.makeText(
+                            this@MainActivity, // Cambia por el nombre de tu Activity
+                            errorMsg,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        this@MainActivity, // Cambia por el nombre de tu Activity
+                        "Error de conexión: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.e("RecuperarPassword", "Error: ${e.message}", e)
+                }
+            }
+        }
     }
 
     @SuppressLint("UseKtx")

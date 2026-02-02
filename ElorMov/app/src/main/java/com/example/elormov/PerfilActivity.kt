@@ -1,5 +1,6 @@
 package com.example.elormov
 
+import RetrofitClient
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,12 +18,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 import com.example.elormov.config.AppConfig
+import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
+//import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
 
 class PerfilActivity : AppCompatActivity() {
 
@@ -46,7 +46,7 @@ class PerfilActivity : AppCompatActivity() {
                 if (bmp != null) {
                     imagenSacada.setImageBitmap(bmp)
 
-                    subirImagenAlServidor(bmp)
+                   // subirImagenAlServidor(bmp)
                 }
             }
         }
@@ -212,7 +212,7 @@ class PerfilActivity : AppCompatActivity() {
         }
     }
 
-    private fun subirImagenAlServidor(bitmap: Bitmap) {
+  /*  private fun subirImagenAlServidor(bitmap: Bitmap) {
         lifecycleScope.launch {
             try {
                 val file = File(cacheDir, "perfil_${System.currentTimeMillis()}.jpg")
@@ -238,6 +238,8 @@ class PerfilActivity : AppCompatActivity() {
             }
         }
     }
+    */
+   */
 
     private fun setLang(lang: String) {
         val locale = java.util.Locale(lang) // "en" para inglés, "es" para español, "eus" para euskera

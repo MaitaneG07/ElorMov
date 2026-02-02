@@ -1,7 +1,7 @@
 package com.example.elormov.retrofit.endpoints
 
+import Users
 import com.example.elormov.retrofit.entities.PerfilAlumnoDto
-import com.example.elormov.retrofit.entities.Users
 import com.example.elormov.retrofit.modelo.LoginRequest
 import com.example.elormov.retrofit.modelo.LoginResponse
 import okhttp3.MultipartBody

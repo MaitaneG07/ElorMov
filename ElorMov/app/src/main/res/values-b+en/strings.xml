@@ -36,6 +36,7 @@
     <!-- buttons -->
     <string name="boton_aceptar">Accept</string>
     <string name="boton_recuperar_password"><u>Forgot your password?</u></string>
+    <string name="boton_recuperar"><u>New Password</u></string>
     <string name="boton_iniciar_sesion">Log in</string>
     <string name="boton_salir">Exit</string>
     <string name="boton_volver">Back</string>
