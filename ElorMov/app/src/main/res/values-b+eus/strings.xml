@@ -31,6 +31,7 @@
     <string name="ciclo">Zikloa</string>
     <string name="curso">Ikasturtea</string>
     <string name="fechaMatricula">Matrikula data</string>
+    <string name="horarioDeProfesor">Irakaslea: </string>
 
     <!-- inputs -->
     <string name="introducir_usuario">Erabiltzailea sartu</string>

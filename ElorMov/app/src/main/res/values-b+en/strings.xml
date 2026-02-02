@@ -31,6 +31,7 @@
     <string name="ciclo">Course</string>
     <string name="curso">Year</string>
     <string name="fechaMatricula">Enrollment date</string>
+    <string name="horarioDeProfesor">Teacher: </string>
 
     <!-- inputs -->
     <string name="introducir_usuario">Enter user</string>
