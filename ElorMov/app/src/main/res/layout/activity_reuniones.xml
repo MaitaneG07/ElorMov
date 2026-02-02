@@ -7,17 +7,72 @@
     android:layout_height="match_parent"
     tools:context=".ReunionesActivity">
 
+    <TextView
+        android:id="@+id/tvTituloReuniones"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Reuniones"
+        android:textColor="#008aab"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingTop="12dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollReuniones"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/tvTituloReuniones"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TableLayout
+            android:id="@+id/tableReuniones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            android:shrinkColumns="*"
+            android:padding="8dp">
+
+            <TableRow>
+                <TextView style="@style/HorarioCellHeader" android:text="@string/hora"/>
+                <TextView style="@style/HorarioCellHeader" android:text="@string/lunes"/>
+                <TextView style="@style/HorarioCellHeader" android:text="@string/martes"/>
+                <TextView style="@style/HorarioCellHeader" android:text="@string/miercoles"/>
+                <TextView style="@style/HorarioCellHeader" android:text="@string/jueves"/>
+                <TextView style="@style/HorarioCellHeader" android:text="@string/viernes"/>
+            </TableRow>
+
+        </TableLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
     <Button
         android:id="@+id/buttonAceptarReuniones"
         android:layout_width="110dp"
         android:layout_height="47dp"
         android:backgroundTint="#008aab"
         android:text="@string/boton_aceptar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonVolverReuniones"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/buttonCancelarReuniones"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/buttonCancelarReuniones"
+        android:layout_width="110dp"
+        android:layout_height="47dp"
+        android:backgroundTint="#008aab"
+        android:text="Cancelar"
+        app:layout_constraintEnd_toStartOf="@+id/buttonVolverReuniones"
+        app:layout_constraintStart_toEndOf="@+id/buttonAceptarReuniones"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <Button
         android:id="@+id/buttonVolverReuniones"
@@ -25,11 +80,10 @@
         android:layout_height="47dp"
         android:backgroundTint="#008aab"
         android:text="@string/boton_volver"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/buttonAceptarReuniones"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintStart_toEndOf="@+id/buttonCancelarReuniones"
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

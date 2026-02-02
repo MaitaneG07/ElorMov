@@ -5,6 +5,6 @@ data class ReunionListaDto(
     val titulo: String?,
     val fecha: String?,
     val estado: String?,
-    val profesorNombre: String?,
-    val alumnoNombre: String?
+    val profesorId: Int,
+    val alumnoId: Int
 )

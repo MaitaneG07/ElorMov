@@ -77,7 +77,10 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         }
 
         botonConsultarReuniones.setOnClickListener {
-            startActivity(Intent(this, ReunionesActivity::class.java))
+            val i = Intent(this, ReunionesActivity::class.java)
+            i.putExtra("USER_ID", userId)
+            i.putExtra("TIPO_ID", tipoDeUsuario)
+            startActivity(i)
         }
 
         botonSalir.setOnClickListener {

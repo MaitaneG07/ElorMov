@@ -33,6 +33,16 @@
     <string name="fechaMatricula">Enrollment date</string>
     <string name="horarioDeProfesor">Teacher: </string>
 
+    <string name="titulo">Title:</string>
+    <string name="tema2">Subject:</string>
+    <string name="dia">Date:</string>
+    <string name="hora2">Time:</string>
+    <string name="aula">Room:</string>
+    <string name="ubicacion">Location:</string>
+    <string name="profesor2">Teacher:</string>
+    <string name="estudiante2">Student:</string>
+    <string name="crearReunion">CREATE MEETING</string>
+
     <!-- inputs -->
     <string name="introducir_usuario">Enter user</string>
     <string name="introducir_password">Enter password</string>
