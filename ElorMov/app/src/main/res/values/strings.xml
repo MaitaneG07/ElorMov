@@ -9,17 +9,40 @@
     <string name="si">SI</string>
     <string name="no">NO</string>
     <string name="perfil">PERFIL</string>
+    <string name="lunes">L</string>
+    <string name="martes">M</string>
+    <string name="miercoles">X</string>
+    <string name="jueves">J</string>
+    <string name="viernes">V</string>
+    <string name="hora">Hora</string>
+    <string name="alumnos">ALUMNOS</string>
+    <string name="profesores">PROFESORES</string>
+
 
     //datos
     <string name="profesor">PROFESOR</string>
     <string name="alumno">ALUMNO</string>
     <string name="nombre">Nombre</string>
+    <string name="apellidos">Apellidos</string>
     <string name="email">Email</string>
     <string name="direccion">Dirección</string>
     <string name="telefono">Teléfono</string>
     <string name="ciclo">Ciclo</string>
     <string name="curso">Curso</string>
     <string name="fechaMatricula">Fecha matrícula</string>
+    <string name="horarioDeProfesor">Profesor:</string>
+
+    //datosReunion
+    <string name="titulo">Titulo:</string>
+    <string name="tema2">Tema:</string>
+    <string name="dia">Dia:</string>
+    <string name="hora2">Hora:</string>
+    <string name="aula">Aula:</string>
+    <string name="ubicacion">Ubicación:</string>
+    <string name="profesor2">Profesor:</string>
+    <string name="estudiante2">Estudiante:</string>
+    <string name="crearReunion">CREAR REUNIÓN</string>
+
 
     //inputs
     <string name="introducir_usuario">Introducir Usuario</string>

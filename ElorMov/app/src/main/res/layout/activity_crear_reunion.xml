@@ -36,6 +36,206 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="615dp" />
+        app:layout_constraintGuide_end="101dp" />
+
+    <TextView
+        android:id="@+id/textViewEstudianteCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/estudiante2"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerEstudianteCR"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewProfesorCR" />
+
+    <TextView
+        android:id="@+id/textViewUbicacionCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ubicacion"
+        app:layout_constraintBottom_toTopOf="@+id/textViewProfesorCR"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerUbicacionCR"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewAulaCR" />
+
+    <TextView
+        android:id="@+id/textViewDiaCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dia"
+        app:layout_constraintBottom_toTopOf="@+id/textViewHoraCR"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerDiaCR"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
+
+    <TextView
+        android:id="@+id/textViewProfesorCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profesor2"
+        app:layout_constraintBottom_toTopOf="@+id/textViewEstudianteCR"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerProfesorCR"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewUbicacionCR" />
+
+    <TextView
+        android:id="@+id/textViewHoraCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hora2"
+        app:layout_constraintBottom_toTopOf="@+id/textViewAulaCR"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerHoraCR"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDiaCR" />
+
+    <TextView
+        android:id="@+id/textViewTituloCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/titulo"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline9" />
+
+    <TextView
+        android:id="@+id/textViewTemaCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tema2"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextMultiLine2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+
+    <TextView
+        android:id="@+id/textViewAulaCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/aula"
+        app:layout_constraintBottom_toTopOf="@+id/textViewUbicacionCR"
+        app:layout_constraintEnd_toStartOf="@+id/spinnerAulaCR"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHoraCR" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="97dp" />
+
+    <TextView
+        android:id="@+id/textViewTituloCR"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/crearReunion"
+        android:textColor="#008aab"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guideline9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextTextMultiLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        app:layout_constraintVertical_bias="0.309" />
+
+    <EditText
+        android:id="@+id/editTextTextMultiLine2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTemaCR" />
+
+    <Spinner
+        android:id="@+id/spinnerDiaCR"
+        android:layout_width="226dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerHoraCR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textViewDiaCR"
+        app:layout_constraintTop_toTopOf="@+id/guideline10" />
+
+    <Spinner
+        android:id="@+id/spinnerHoraCR"
+        android:layout_width="226dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerAulaCR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textViewHoraCR"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerDiaCR" />
+
+    <Spinner
+        android:id="@+id/spinnerAulaCR"
+        android:layout_width="226dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerUbicacionCR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textViewAulaCR"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerHoraCR" />
+
+    <Spinner
+        android:id="@+id/spinnerUbicacionCR"
+        android:layout_width="226dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerProfesorCR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textViewUbicacionCR"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerAulaCR" />
+
+    <Spinner
+        android:id="@+id/spinnerProfesorCR"
+        android:layout_width="226dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerEstudianteCR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textViewProfesorCR"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerUbicacionCR" />
+
+    <Spinner
+        android:id="@+id/spinnerEstudianteCR"
+        android:layout_width="226dp"
+        android:layout_height="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textViewEstudianteCR"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerProfesorCR" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="325dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

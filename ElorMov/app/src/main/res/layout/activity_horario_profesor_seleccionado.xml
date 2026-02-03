@@ -7,4 +7,74 @@
     android:layout_height="match_parent"
     tools:context=".HorarioProfesorSeleccionadoActivity">
 
+    <TextView
+        android:id="@+id/txNombreProfesorSeleccionado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/profesor"
+        android:textAlignment="center"
+        android:textColor="#008aab"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="113dp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollHorario"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/guideline8"
+        app:layout_constraintBottom_toTopOf="@id/guideline6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TableLayout
+            android:id="@+id/tableHorario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="*"
+            android:shrinkColumns="*"
+            android:padding="8dp">
+
+            <TableRow>
+                <TextView style="@style/HorarioCellHeader" android:text="@string/hora" />
+                <TextView style="@style/HorarioCellHeader" android:text="@string/lunes" />
+                <TextView style="@style/HorarioCellHeader" android:text="@string/martes" />
+                <TextView style="@style/HorarioCellHeader" android:text="@string/miercoles" />
+                <TextView style="@style/HorarioCellHeader" android:text="@string/jueves" />
+                <TextView style="@style/HorarioCellHeader" android:text="@string/viernes" />
+            </TableRow>
+
+        </TableLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="597dp" />
+
+    <Button
+        android:id="@+id/buttonVolverHPS"
+        android:layout_width="110dp"
+        android:layout_height="47dp"
+        android:backgroundTint="#008aab"
+        android:text="@string/boton_volver"
+        app:layout_constraintTop_toTopOf="@id/guideline6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
