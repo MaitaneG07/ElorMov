@@ -52,7 +52,13 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         }
 
         if (userId != -1) {
-            cargarHorarioProfesor(userId)
+            if (tipoDeUsuario == 3) {
+                // PROFESOR
+                cargarHorarioProfesor(userId)
+            } else if (tipoDeUsuario == 4) {
+                // ALUMNO
+                cargarHorarioAlumno(userId)
+            }
         }
 
         // Listeners
@@ -73,7 +79,10 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         }
 
         botonConsultarReuniones.setOnClickListener {
-            startActivity(Intent(this, ReunionesActivity::class.java))
+            val i = Intent(this, ReunionesActivity::class.java)
+            i.putExtra("USER_ID", userId)
+            i.putExtra("TIPO_ID", tipoDeUsuario)
+            startActivity(i)
         }
 
         botonSalir.setOnClickListener {
@@ -95,6 +104,28 @@ class PaginaPrincipalActivity : AppCompatActivity() {
                         pintarHorarioEnTabla(body)
                     } else {
                         mostrarError("No se ha recibido el horario")
+                    }
+                } else {
+                    manejarErrorHttp(resp.code())
+                }
+
+            } catch (e: Exception) {
+                manejarErrorException(e)
+            }
+        }
+    }
+
+    private fun cargarHorarioAlumno(alumnoId: Int) {
+        lifecycleScope.launch {
+            try {
+                val resp = RetrofitClient.horariosInterface.getHorarioAlumno(alumnoId)
+
+                if (resp.isSuccessful) {
+                    val body = resp.body()
+                    if (body != null) {
+                        pintarHorarioEnTabla(body)
+                    } else {
+                        mostrarError("No se ha recibido el horario del alumno")
                     }
                 } else {
                     manejarErrorHttp(resp.code())

@@ -1,4 +1,5 @@
 import com.example.elormov.retrofit.endpoints.HorariosInterface
+import com.example.elormov.retrofit.endpoints.ReunionesInterface
 import com.example.elormov.retrofit.endpoints.PasswordInterface
 import com.example.elormov.retrofit.endpoints.UsersInterface
 import retrofit2.Retrofit
@@ -16,6 +17,7 @@ object RetrofitClient {
     private var retrofit: Retrofit? = null
     lateinit var usersInterface: UsersInterface
     lateinit var horariosInterface: HorariosInterface
+    lateinit var reunionesInterface: ReunionesInterface
 
     lateinit var passwordInterface: PasswordInterface
 
@@ -27,7 +29,7 @@ object RetrofitClient {
 
         usersInterface = retrofit!!.create(UsersInterface::class.java)
         horariosInterface = retrofit!!.create(HorariosInterface::class.java)
-        passwordInterface = retrofit!!.create(PasswordInterface::class.java)
+        reunionesInterface = retrofit!!.create(ReunionesInterface::class.java)
     }
 }
 

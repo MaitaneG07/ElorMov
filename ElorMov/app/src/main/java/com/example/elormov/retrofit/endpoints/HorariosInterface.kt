@@ -10,4 +10,9 @@ interface HorariosInterface {
     suspend fun getHorarioProfesor(
         @Path("id") profesorId: Int
     ): Response<HorarioProfesorDto>
+
+    @GET("api/horarios/alumno/{id}")
+    suspend fun getHorarioAlumno(
+        @Path("id") alumnoId: Int
+    ): Response<HorarioProfesorDto>
 }

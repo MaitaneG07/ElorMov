@@ -14,19 +14,34 @@
     <string name="lunes">AL</string>
     <string name="martes">AR</string>
     <string name="miercoles">AZ</string>
+    <string name="jueves">OS</string>
     <string name="viernes">OR</string>
     <string name="hora">Ordua</string>
+    <string name="alumnos">IKASLEAK</string>
+    <string name="profesores">IRAKASLEAK</string>
 
     <!-- data -->
     <string name="profesor">IRAKASLEA</string>
     <string name="alumno">IKASLEA</string>
     <string name="nombre">Izena</string>
+    <string name="apellidos">Abizenak</string>
     <string name="email">Emaila</string>
     <string name="direccion">Helbidea</string>
     <string name="telefono">Telefonoa</string>
     <string name="ciclo">Zikloa</string>
     <string name="curso">Ikasturtea</string>
     <string name="fechaMatricula">Matrikula data</string>
+    <string name="horarioDeProfesor">Irakaslea: </string>
+
+    <string name="titulo">Izenburua:</string>
+    <string name="tema2">Gaia:</string>
+    <string name="dia">Eguna:</string>
+    <string name="hora2">Ordua:</string>
+    <string name="aula">Gela:</string>
+    <string name="ubicacion">Kokalekua:</string>
+    <string name="profesor2">Irakaslea:</string>
+    <string name="estudiante2">Ikaslea:</string>
+    <string name="crearReunion">BILERA SORTU</string>
 
     <!-- inputs -->
     <string name="introducir_usuario">Erabiltzailea sartu</string>
