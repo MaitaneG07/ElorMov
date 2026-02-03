@@ -15,4 +15,9 @@ interface ReunionesInterface {
         @Path("reunionId") reunionId: Int,
         @Body body: EstadoUpdateDto
     ): Response<Map<String, Any>>
+
+    @POST("api/reuniones")
+    suspend fun crearReunion(
+        @Body reunion: Map<String, @JvmSuppressWildcards Any>
+    ): Response<Void>
 }
