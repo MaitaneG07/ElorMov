@@ -1,11 +1,14 @@
 package com.example.elormov
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -25,10 +28,8 @@ class ReunionesActivity : AppCompatActivity() {
     private var tipoId: Int = -1
 
     private var reuniones: List<ReunionListaDto> = emptyList()
-    private var reunionSeleccionada: ReunionListaDto? = null
 
-    private lateinit var btnAceptar: Button
-    private lateinit var btnCancelar: Button
+    private lateinit var btnCrear: Button
     private lateinit var btnVolver: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,37 +40,23 @@ class ReunionesActivity : AppCompatActivity() {
         tipoId = intent.getIntExtra("TIPO_ID", -1)
 
         table = findViewById(R.id.tableReuniones)
-
-        btnAceptar = findViewById(R.id.buttonAceptarReuniones)
-        btnCancelar = findViewById(R.id.buttonCancelarReuniones)
+        btnCrear = findViewById(R.id.buttonCrearReunion)
         btnVolver = findViewById(R.id.buttonVolverReuniones)
-
-        val esProfesor = (tipoId == 3)
-        btnAceptar.isEnabled = esProfesor
-        btnCancelar.isEnabled = esProfesor
 
         btnVolver.setOnClickListener { finish() }
 
-        btnAceptar.setOnClickListener {
-            val sel = reunionSeleccionada
-            if (!esProfesor) return@setOnClickListener
-            if (sel == null) {
-                Toast.makeText(this, "Selecciona una reunión", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            cambiarEstado(sel.idReunion, "aceptada")
+        btnCrear.setOnClickListener {
+            val i = Intent(this, CrearReunionActivity::class.java)
+            i.putExtra("USER_ID", userId)
+            i.putExtra("TIPO_ID", tipoId)
+            startActivity(i)
         }
 
-        btnCancelar.setOnClickListener {
-            val sel = reunionSeleccionada
-            if (!esProfesor) return@setOnClickListener
-            if (sel == null) {
-                Toast.makeText(this, "Selecciona una reunión", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            cambiarEstado(sel.idReunion, "denegada")
-        }
+        cargarReuniones()
+    }
 
+    override fun onResume() {
+        super.onResume()
         cargarReuniones()
     }
 
@@ -82,31 +69,40 @@ class ReunionesActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 reuniones = RetrofitClient.reunionesInterface.getReunionesUsuario(userId)
-                reunionSeleccionada = null
                 pintarTabla(reuniones)
             } catch (e: Exception) {
-                Toast.makeText(this@ReunionesActivity, "Error cargando reuniones", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
+                Toast.makeText(
+                    this@ReunionesActivity,
+                    "Error cargando reuniones",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
 
-    private fun cambiarEstado(reunionId: Int, nuevoEstado: String) {
+    private fun cambiarEstado(reunionId: Int, nuevoEstado: String, onOk: () -> Unit) {
         lifecycleScope.launch {
             try {
-                val body = mapOf(
-                    "profesorId" to userId,
-                    "estado" to nuevoEstado
+                val body = com.example.elormov.retrofit.entities.EstadoUpdateDto(
+                    profesorId = userId,
+                    estado = nuevoEstado
                 )
 
-                val resp = RetrofitClient.reunionesInterface.cambiarEstado(reunionId, body)
-                if (resp.isSuccessful) {
-                    Toast.makeText(this@ReunionesActivity, "Estado actualizado", Toast.LENGTH_SHORT).show()
-                    cargarReuniones() // refresca tabla y colores
-                } else {
-                    Toast.makeText(this@ReunionesActivity, "No se pudo actualizar (HTTP ${resp.code()})", Toast.LENGTH_LONG).show()
-                }
+                RetrofitClient.reunionesInterface.cambiarEstado(reunionId, body)
+
+                Toast.makeText(this@ReunionesActivity, "Estado actualizado", Toast.LENGTH_SHORT).show()
+                onOk()
+                cargarReuniones()
+
+            } catch (e: retrofit2.HttpException) {
+                e.printStackTrace()
+                val codigo = e.code()
+                val mensajeError = e.response()?.errorBody()?.string() ?: "Error desconocido"
+                Toast.makeText(this@ReunionesActivity, "Error HTTP $codigo: $mensajeError", Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                Toast.makeText(this@ReunionesActivity, "Error actualizando estado", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
+                Toast.makeText(this@ReunionesActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -119,7 +115,6 @@ class ReunionesActivity : AppCompatActivity() {
         for (r in lista) {
             val fecha = parseFecha(r.fecha) ?: continue
             val diaIdx = diaToIndex(fecha) ?: continue
-
             val horaSlot = horaToSlot(fecha.hour) ?: continue
 
             val row = horaSlot - 1
@@ -129,7 +124,6 @@ class ReunionesActivity : AppCompatActivity() {
 
         for (hora in 1..6) {
             val row = TableRow(this)
-
             row.addView(crearCelda(text = hora.toString(), isHeader = true, estado = null, reunion = null))
 
             for (col in 0..4) {
@@ -137,12 +131,17 @@ class ReunionesActivity : AppCompatActivity() {
                 val texto = reunion?.titulo ?: ""
                 row.addView(crearCelda(text = texto, isHeader = false, estado = reunion?.estado, reunion = reunion))
             }
-
             table.addView(row)
         }
     }
 
-    private fun crearCelda(text: String, isHeader: Boolean, estado: String?, reunion: ReunionListaDto?): TextView {
+    private fun crearCelda(
+        text: String,
+        isHeader: Boolean,
+        estado: String?,
+        reunion: ReunionListaDto?
+    ): TextView {
+
         val tv = TextView(this)
         tv.text = text
         tv.gravity = Gravity.CENTER
@@ -152,7 +151,7 @@ class ReunionesActivity : AppCompatActivity() {
         tv.maxLines = if (isHeader) 1 else 3
 
         if (isHeader) {
-            tv.setBackgroundResource(R.drawable.bg_cell) // tu fondo de celdas
+            tv.setBackgroundResource(R.drawable.bg_cell)
         } else {
             tv.setBackgroundColor(colorPorEstado(estado))
         }
@@ -160,38 +159,95 @@ class ReunionesActivity : AppCompatActivity() {
         tv.layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
 
         if (!isHeader && reunion != null) {
-            tv.setOnClickListener {
-                reunionSeleccionada = reunion
-                Toast.makeText(this, "Seleccionada: ${reunion.titulo}", Toast.LENGTH_SHORT).show()
-            }
+            tv.setOnClickListener { mostrarPopupReunion(reunion) }
         }
 
         return tv
     }
 
+    private fun mostrarPopupReunion(reunion: ReunionListaDto) {
+        val esProfesor = (tipoId == 3)
+
+        val titulo = reunion.titulo ?: "(Sin título)"
+        val fecha = reunion.fecha ?: "-"
+        val estado = reunion.estado ?: "-"
+
+        val layout = LinearLayout(this)
+        layout.orientation = LinearLayout.VERTICAL
+        layout.setPadding(50, 40, 50, 10)
+
+        val tvInfo = TextView(this)
+        tvInfo.text = "Fecha: $fecha\nEstado actual: $estado"
+        tvInfo.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+        tvInfo.setTextColor(Color.BLACK)
+        tvInfo.setPadding(0, 0, 0, 30)
+        layout.addView(tvInfo)
+
+        val builder = AlertDialog.Builder(this)
+            .setTitle(titulo)
+            .setView(layout)
+
+        val dialog = builder.create()
+
+        if (esProfesor) {
+            fun agregarBotonAccion(texto: String, colorHex: String, estadoAEnviar: String) {
+                val btn = Button(this)
+                btn.text = texto
+                btn.setBackgroundColor(Color.parseColor(colorHex))
+                btn.setTextColor(Color.WHITE)
+
+                val params = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                params.setMargins(0, 10, 0, 10)
+                btn.layoutParams = params
+
+                btn.setOnClickListener {
+                    cambiarEstado(reunion.idReunion, estadoAEnviar) {
+                        dialog.dismiss()
+                    }
+                }
+                layout.addView(btn)
+            }
+
+            agregarBotonAccion("Aceptar Reunión", "#4CAF50", "aceptada")
+            agregarBotonAccion("Denegar Reunión", "#F44336", "denegada")
+            agregarBotonAccion("Marcar Conflicto", "#FF9800", "conflicto")
+        }
+
+        dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Cerrar") { d, _ ->
+            d.dismiss()
+        }
+
+        dialog.show()
+    }
+
     private fun colorPorEstado(estado: String?): Int {
         return when (estado?.lowercase()) {
-            "conflicto" -> Color.parseColor("#BDBDBD") // gris
-            "aceptada"  -> Color.parseColor("#4CAF50") // verde
-            "denegada"  -> Color.parseColor("#F44336") // rojo
-            "pendiente" -> Color.parseColor("#FF9800") // naranja
-            else        -> Color.TRANSPARENT
+            "conflicto" -> Color.parseColor("#BDBDBD")
+            "aceptada" -> Color.parseColor("#4CAF50")
+            "denegada" -> Color.parseColor("#F44336")
+            "pendiente" -> Color.parseColor("#FF9800")
+            else -> Color.TRANSPARENT
         }
     }
 
     private fun parseFecha(s: String?): LocalDateTime? {
         return try {
             if (s.isNullOrBlank()) null else LocalDateTime.parse(s)
-        } catch (_: Exception) { null }
+        } catch (_: Exception) {
+            null
+        }
     }
 
     private fun diaToIndex(fecha: LocalDateTime): Int? {
         return when (fecha.dayOfWeek.value) {
-            1 -> 0 // L
-            2 -> 1 // M
-            3 -> 2 // X
-            4 -> 3 // J
-            5 -> 4 // V
+            1 -> 0
+            2 -> 1
+            3 -> 2
+            4 -> 3
+            5 -> 4
             else -> null
         }
     }

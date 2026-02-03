@@ -4,8 +4,14 @@ import RetrofitClient
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager // <--- NUEVO
+import android.net.Network // <--- NUEVO
+import android.net.NetworkCapabilities // <--- NUEVO
+import android.net.NetworkRequest // <--- NUEVO
 import android.os.Bundle
+import android.view.View // <--- NUEVO
 import android.widget.Button
+import android.widget.LinearLayout // <--- NUEVO
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -20,19 +26,29 @@ class MainActivity : AppCompatActivity() {
 
     //ip para usar el servidor en el mismo pc
     private val ipServidor = "10.0.2.2"
-    //ip del servidor de Giselle:
-    //private val ipServidor = "10.5.104.31"
-    //ip del servidor de Maitane:
-    //private val ipServidor = "10.5.104.25"
-    //cambiar puerto cuando sea necesario
+    //private val ipServidor = "10.5.104.31" // Giselle
+    //private val ipServidor = "10.5.104.25" // Maitane
     private val puerto = 9000
+
+    // --- VARIABLES NUEVAS PARA RED ---
+    private lateinit var connectivityManager: ConnectivityManager
+    private lateinit var networkCallback: ConnectivityManager.NetworkCallback
+    private var layoutSinConexion: LinearLayout? = null
+    // ---------------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // 1. Inicializar la vista de bloqueo (la que pusimos en el XML)
+        layoutSinConexion = findViewById(R.id.layoutSinConexion) // <--- NUEVO
+
         RetrofitClient.init(ipServidor, puerto)
 
+        // Inicializamos el monitor de red
+        inicializarMonitorDeRed() // <--- NUEVO
+
+        // Intentamos conectar (esto es tu código original)
         conectarAlServidor(null)
 
         val inputUsuario = findViewById<TextInputEditText>(R.id.InputEmail)
@@ -68,11 +84,7 @@ class MainActivity : AppCompatActivity() {
                         if (userOk != null) {
                             guardarDatos(usuario, password)
 
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Logeado con éxito",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(this@MainActivity, "Logeado con éxito", Toast.LENGTH_SHORT).show()
 
                             val tipoId = userOk.tipos?.id ?: -1
 
@@ -84,45 +96,97 @@ class MainActivity : AppCompatActivity() {
                             startActivity(intent)
                             finish()
                         } else {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "Respuesta inválida del servidor",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            Toast.makeText(this@MainActivity, "Respuesta inválida del servidor", Toast.LENGTH_SHORT).show()
                         }
 
                     } else {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Usuario o contraseña incorrectos",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(this@MainActivity, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
                     }
 
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Error: ${e.javaClass.simpleName} - ${e.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this@MainActivity, "Error: ${e.javaClass.simpleName} - ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
+
+    // --- MÉTODOS DE CICLO DE VIDA PARA LA RED (NUEVO) ---
+    override fun onResume() {
+        super.onResume()
+        // Registrar el callback cuando la app se abre o vuelve a primer plano
+        try {
+            val networkRequest = NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build()
+            connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
+            verificarEstadoInicial() // Chequeo manual al arrancar
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Dejar de escuchar cuando la app se minimiza (ahorra batería)
+        try {
+            connectivityManager.unregisterNetworkCallback(networkCallback)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    // ----------------------------------------------------
+
+    // --- LÓGICA DEL MONITOR DE RED (NUEVO) ---
+    private fun inicializarMonitorDeRed() {
+        connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            // Se llama cuando VUELVE internet
+            override fun onAvailable(network: Network) {
+                runOnUiThread {
+                    if (layoutSinConexion?.visibility == View.VISIBLE) {
+                        layoutSinConexion?.visibility = View.GONE
+                        Toast.makeText(this@MainActivity, "Conexión recuperada", Toast.LENGTH_SHORT).show()
+                        // Opcional: Reintentar conectar al backend automáticamente
+                        conectarAlServidor(null)
+                    }
+                }
+            }
+
+            // Se llama cuando SE PIERDE internet
+            override fun onLost(network: Network) {
+                runOnUiThread {
+                    layoutSinConexion?.visibility = View.VISIBLE
+                    Toast.makeText(this@MainActivity, "Se ha perdido la conexión", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun verificarEstadoInicial() {
+        val activeNetwork = connectivityManager.activeNetwork
+        val caps = connectivityManager.getNetworkCapabilities(activeNetwork)
+        val isConnected = caps != null && caps.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+
+        if (!isConnected) {
+            layoutSinConexion?.visibility = View.VISIBLE
+        } else {
+            layoutSinConexion?.visibility = View.GONE
+        }
+    }
+    // -----------------------------------------
 
     private fun conectarAlServidor(txtEstado: TextView?) {
         txtEstado?.text = "Estado: Conectando..."
 
         lifecycleScope.launch {
             try {
-                // "Ping": si esto responde, hay conexión al backend
                 RetrofitClient.usersInterface.getAllUsers()
-
                 txtEstado?.text = "Estado: Conectado"
             } catch (e: Exception) {
                 txtEstado?.text = "Estado: Error de conexión"
-                Toast.makeText(this@MainActivity, "No se pudo conectar con el servidor", Toast.LENGTH_SHORT).show()
+                // No mostramos Toast aquí para no saturar si es un reintento automático
             }
         }
     }

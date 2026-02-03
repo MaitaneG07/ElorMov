@@ -53,24 +53,13 @@
     </androidx.core.widget.NestedScrollView>
 
     <Button
-        android:id="@+id/buttonAceptarReuniones"
+        android:id="@+id/buttonCrearReunion"
         android:layout_width="110dp"
         android:layout_height="47dp"
         android:backgroundTint="#008aab"
-        android:text="@string/boton_aceptar"
-        app:layout_constraintEnd_toStartOf="@+id/buttonCancelarReuniones"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <Button
-        android:id="@+id/buttonCancelarReuniones"
-        android:layout_width="110dp"
-        android:layout_height="47dp"
-        android:backgroundTint="#008aab"
-        android:text="Cancelar"
+        android:text="@string/boton_crear"
         app:layout_constraintEnd_toStartOf="@+id/buttonVolverReuniones"
-        app:layout_constraintStart_toEndOf="@+id/buttonAceptarReuniones"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -80,8 +69,8 @@
         android:layout_height="47dp"
         android:backgroundTint="#008aab"
         android:text="@string/boton_volver"
+        app:layout_constraintStart_toEndOf="@+id/buttonCrearReunion"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonCancelarReuniones"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -91,4 +80,5 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="615dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

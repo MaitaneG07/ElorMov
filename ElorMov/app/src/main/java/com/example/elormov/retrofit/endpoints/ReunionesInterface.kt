@@ -1,5 +1,6 @@
 package com.example.elormov.retrofit.endpoints
 
+import com.example.elormov.retrofit.entities.EstadoUpdateDto
 import com.example.elormov.retrofit.entities.ReunionListaDto
 import retrofit2.Response
 import retrofit2.http.*
@@ -12,6 +13,6 @@ interface ReunionesInterface {
     @PATCH("api/reuniones/{reunionId}/estado")
     suspend fun cambiarEstado(
         @Path("reunionId") reunionId: Int,
-        @Body body: Map<String, Any>
+        @Body body: EstadoUpdateDto
     ): Response<Map<String, Any>>
 }

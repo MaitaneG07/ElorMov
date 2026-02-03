@@ -3,10 +3,7 @@ package com.example.elormov
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class CrearReunionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,13 +14,20 @@ class CrearReunionActivity : AppCompatActivity() {
         val botonCancelar : Button = findViewById(R.id.buttonCancelarCR)
 
         botonCrear.setOnClickListener {
-            startActivity(Intent(this, PaginaPrincipalActivity::class.java))
-            finish()
+
+            volverAPaginaPrincipal()
         }
 
         botonCancelar.setOnClickListener {
-            startActivity(Intent(this, PaginaPrincipalActivity::class.java))
-            finish()
+
+            volverAPaginaPrincipal()
         }
+    }
+
+    private fun volverAPaginaPrincipal() {
+        val intent = Intent(this, PaginaPrincipalActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        startActivity(intent)
+        finish()
     }
 }

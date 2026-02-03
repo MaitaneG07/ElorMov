@@ -7,32 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layoutPassword"
-            android:layout_width="326dp"
-            android:layout_height="54dp"
-            app:boxBackgroundMode="outline"
-            app:boxCornerRadiusBottomEnd="8dp"
-            app:boxCornerRadiusBottomStart="8dp"
-            app:boxCornerRadiusTopEnd="8dp"
-            app:boxCornerRadiusTopStart="8dp"
-            app:boxStrokeColor="#211261"
-            app:boxStrokeWidth="2dp"
-            app:boxStrokeWidthFocused="3dp"
-            app:hintEnabled="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.623">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutPassword"
+        android:layout_width="326dp"
+        android:layout_height="54dp"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="#211261"
+        app:boxStrokeWidth="2dp"
+        app:boxStrokeWidthFocused="3dp"
+        app:hintEnabled="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.623">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/InputContrasenya"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/introducir_password"
-                android:inputType="textPassword"
-                android:textSize="12sp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/InputContrasenya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/introducir_password"
+            android:inputType="textPassword"
+            android:textSize="12sp" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -105,4 +105,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.667" />
+
+    <LinearLayout
+        android:id="@+id/layoutSinConexion"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F2FFFFFF"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:elevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_dialog_alert"
+            app:tint="#D32F2F" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="¡Sin conexión a internet!"
+            android:textColor="#D32F2F"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Esperando red..."
+            android:textColor="#555555"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
