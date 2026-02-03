@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.elormov.ui.adapters.ProfesorTablaAdapter
 import kotlinx.coroutines.launch
 
-class ConsultaHorariosProfesorActivity : AppCompatActivity() {
+class ConsultaHorariosProfesorActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_consulta_horarios_profesor)

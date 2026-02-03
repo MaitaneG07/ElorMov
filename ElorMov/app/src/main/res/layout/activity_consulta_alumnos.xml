@@ -84,4 +84,6 @@
             android:layout_marginStart="12dp" />
     </LinearLayout>
 
+    <include layout="@layout/include_sin_conexion" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

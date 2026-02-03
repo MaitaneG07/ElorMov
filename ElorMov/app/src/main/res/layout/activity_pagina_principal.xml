@@ -133,5 +133,6 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <include layout="@layout/include_sin_conexion" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

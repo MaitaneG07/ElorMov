@@ -1,11 +1,14 @@
 package com.example.elormov
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
@@ -13,18 +16,17 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.example.elormov.config.AppConfig
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import com.example.elormov.config.AppConfig
 
-class PerfilActivity : AppCompatActivity() {
+class PerfilActivity : BaseActivity() {
 
     private lateinit var imagenSacada: ImageView
     private var userId: Int = -1
@@ -45,7 +47,6 @@ class PerfilActivity : AppCompatActivity() {
                 val bmp = result.data?.extras?.get("data") as? Bitmap
                 if (bmp != null) {
                     imagenSacada.setImageBitmap(bmp)
-
                     subirImagenAlServidor(bmp)
                 }
             }
@@ -55,8 +56,6 @@ class PerfilActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil)
 
-        //recibo el tipo de usuario de la ventana anterior
-        //si es profesor muestra unas cosas y si el alumno otras
         tipoDeUsuario = intent.getIntExtra("TIPO_USUARIO", -1)
         userId = intent.getIntExtra("USER_ID", -1)
 
@@ -64,17 +63,41 @@ class PerfilActivity : AppCompatActivity() {
         val tvDatosPerfil: TextView = findViewById(R.id.textViewDatosPerfil)
         val botonCamara: Button = findViewById(R.id.buttonAnnadirImagen)
         imagenSacada = findViewById(R.id.imageViewPerfil)
-        val spinnerIdioma : Spinner = findViewById(R.id.spinnerIdioma)
-        val idiomas = listOf("ES", "EUS", "ENG")
+        val spinnerIdioma: Spinner = findViewById(R.id.spinnerIdioma)
+
+        val opcionesMenu = listOf("ESP", "EUS", "ING")
+        val codigosIdioma = listOf("es", "eus", "en")
 
         val adapter = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
-            idiomas
+            opcionesMenu
         )
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerIdioma.adapter = adapter
+
+        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val idiomaActual = prefs.getString("idioma", "es")
+
+        // Busca en qué posición está el idioma actual para seleccionarlo por defecto
+        val indexActual = codigosIdioma.indexOf(idiomaActual)
+
+        if (indexActual >= 0) {
+            spinnerIdioma.setSelection(indexActual, false)
+        }
+
+        spinnerIdioma.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val codigoSeleccionado = codigosIdioma[position]
+
+                if (codigoSeleccionado != idiomaActual) {
+                    prefs.edit().putString("idioma", codigoSeleccionado).apply()
+                    recreate()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         botonCamara.setOnClickListener {
             val granted = ContextCompat.checkSelfPermission(
@@ -200,7 +223,6 @@ class PerfilActivity : AppCompatActivity() {
         } else {
             tvDatosPerfil.text = "Rol desconocido (TIPO_USUARIO=$tipoDeUsuario)"
         }
-
     }
 
     private fun abrirCamara() {
@@ -238,15 +260,4 @@ class PerfilActivity : AppCompatActivity() {
             }
         }
     }
-
-    private fun setLang(lang: String) {
-        val locale = java.util.Locale(lang) // "en" para inglés, "es" para español, "eus" para euskera
-        java.util.Locale.setDefault(locale)
-        val config = resources.configuration
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
-
-        recreate()
-    }
-
 }

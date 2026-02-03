@@ -19,7 +19,7 @@ import com.example.elormov.retrofit.entities.ReunionListaDto
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class ReunionesActivity : AppCompatActivity() {
+class ReunionesActivity : BaseActivity() {
 
     private val dias = listOf("LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES")
     private lateinit var table: TableLayout

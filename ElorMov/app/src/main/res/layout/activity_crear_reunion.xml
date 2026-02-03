@@ -238,4 +238,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="325dp" />
 
+    <include layout="@layout/include_sin_conexion" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

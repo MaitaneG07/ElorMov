@@ -24,7 +24,7 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.example.elormov.config.AppConfig
 
-class ConsultaAlumnosActivity : AppCompatActivity() {
+class ConsultaAlumnosActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_consulta_alumnos)

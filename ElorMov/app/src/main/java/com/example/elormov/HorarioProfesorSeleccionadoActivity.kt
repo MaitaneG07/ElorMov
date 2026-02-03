@@ -15,7 +15,7 @@ import com.example.elormov.retrofit.entities.HorarioProfesorDto
 import com.example.elormov.retrofit.entities.HorariosDto
 import kotlinx.coroutines.launch
 
-class HorarioProfesorSeleccionadoActivity : AppCompatActivity() {
+class HorarioProfesorSeleccionadoActivity : BaseActivity() {
 
     private val dias = listOf("LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES")
     private lateinit var tableHorario: TableLayout

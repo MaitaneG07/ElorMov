@@ -17,7 +17,7 @@ import com.example.elormov.retrofit.entities.HorarioProfesorDto
 import com.example.elormov.retrofit.entities.HorariosDto
 import kotlinx.coroutines.launch
 
-class PaginaPrincipalActivity : AppCompatActivity() {
+class PaginaPrincipalActivity : BaseActivity() {
 
     private var tipoDeUsuario: Int = -1
     private val dias = listOf("LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES")
