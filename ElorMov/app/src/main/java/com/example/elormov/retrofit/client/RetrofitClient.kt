@@ -18,7 +18,6 @@ object RetrofitClient {
     lateinit var usersInterface: UsersInterface
     lateinit var horariosInterface: HorariosInterface
     lateinit var reunionesInterface: ReunionesInterface
-
     lateinit var passwordInterface: PasswordInterface
 
     fun init(ipServidor: String, puerto: Int) {
@@ -30,6 +29,7 @@ object RetrofitClient {
         usersInterface = retrofit!!.create(UsersInterface::class.java)
         horariosInterface = retrofit!!.create(HorariosInterface::class.java)
         reunionesInterface = retrofit!!.create(ReunionesInterface::class.java)
+        passwordInterface = retrofit!!.create(PasswordInterface::class.java)
     }
 }
 

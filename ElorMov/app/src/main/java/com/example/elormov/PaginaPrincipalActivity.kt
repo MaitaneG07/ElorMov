@@ -27,8 +27,7 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pagina_principal)
 
-        // Recepción de datos
-        val nombre = intent.getStringExtra("USER_NOMBRE") ?: "Usuario"
+        val nombre = intent.getStringExtra("USER_NOMBRE") ?: ""
         val userId = intent.getIntExtra("USER_ID", -1)
         tipoDeUsuario = intent.getIntExtra("TIPO_ID", -1)
 
@@ -70,12 +69,11 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         }
 
         botonConsultar.setOnClickListener {
-            val destino = when (tipoDeUsuario) {
-                3 -> ConsultaAlumnosActivity::class.java
-                4 -> ConsultaHorariosProfesorActivity::class.java
-                else -> null
+            if (tipoDeUsuario == 3) {
+                startActivity(Intent(this, ConsultaAlumnosActivity::class.java))
+            } else if (tipoDeUsuario == 4) {
+                startActivity(Intent(this, ConsultaHorariosProfesorActivity::class.java))
             }
-            destino?.let { startActivity(Intent(this, it)) }
         }
 
         botonConsultarReuniones.setOnClickListener {
@@ -86,9 +84,7 @@ class PaginaPrincipalActivity : AppCompatActivity() {
         }
 
         botonSalir.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
     }

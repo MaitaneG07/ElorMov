@@ -10,8 +10,7 @@
     <Button
         android:id="@+id/buttonConsultarReunionesPP"
         android:layout_width="316dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="46dp"
         android:backgroundTint="#211261"
         android:text="@string/boton_consultarReuniones"
         app:layout_constraintBottom_toTopOf="@+id/buttonSalirPP"
@@ -20,14 +19,26 @@
         app:layout_constraintTop_toBottomOf="@+id/buttonConsultarPP" />
 
     <Button
+        android:id="@+id/buttonConsultarPP"
+        android:layout_width="316dp"
+        android:layout_height="46dp"
+        android:backgroundTint="#211261"
+        android:text="@string/boton_consultarEstandar"
+        app:layout_constraintBottom_toTopOf="@+id/buttonConsultarReunionesPP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <Button
         android:id="@+id/buttonSalirPP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:backgroundTint="#008aab"
         android:text="@string/boton_salir"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonConsultarReunionesPP" />
 

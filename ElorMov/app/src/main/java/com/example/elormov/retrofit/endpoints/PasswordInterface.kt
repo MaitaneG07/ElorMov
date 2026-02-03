@@ -1,5 +1,6 @@
 package com.example.elormov.retrofit.endpoints
 
+    import okhttp3.ResponseBody
     import retrofit2.Response
     import retrofit2.Retrofit
     import retrofit2.converter.gson.GsonConverterFactory
@@ -11,5 +12,5 @@ package com.example.elormov.retrofit.endpoints
         @POST("api/auth/recuperar-password")
         suspend fun recuperarPassword(
             @Body request: Map<String, String>
-        ): Response<String>
+        ): Response<ResponseBody>
     }
