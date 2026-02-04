@@ -55,14 +55,15 @@
 
     <Button
         android:id="@+id/buttonVolverCHP"
-        android:layout_width="110dp"
-        android:layout_height="47dp"
+        android:layout_width="145dp"
+        android:layout_height="63dp"
         android:backgroundTint="#008aab"
         android:text="@string/boton_volver"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3" />
+        app:layout_constraintTop_toTopOf="@+id/guideline3"
+        app:layout_constraintVertical_bias="0.339" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline7"

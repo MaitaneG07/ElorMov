@@ -25,7 +25,9 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import okhttp3.RequestBody
 
+// Usamos BaseActivity para mantener coherencia con tu MainActivity
 class PerfilActivity : BaseActivity() {
 
     private lateinit var imagenSacada: ImageView
@@ -47,6 +49,7 @@ class PerfilActivity : BaseActivity() {
                 val bmp = result.data?.extras?.get("data") as? Bitmap
                 if (bmp != null) {
                     imagenSacada.setImageBitmap(bmp)
+                    // Usamos tu lógica que sí sube la imagen
                     subirImagenAlServidor(bmp)
                 }
             }
@@ -65,6 +68,7 @@ class PerfilActivity : BaseActivity() {
         imagenSacada = findViewById(R.id.imageViewPerfil)
         val spinnerIdioma: Spinner = findViewById(R.id.spinnerIdioma)
 
+        // LÓGICA DE IDIOMAS (Usamos la TUYA porque tiene el Listener que hace que funcione)
         val opcionesMenu = listOf("ESP", "EUS", "ING")
         val codigosIdioma = listOf("es", "eus", "en")
 
@@ -79,13 +83,12 @@ class PerfilActivity : BaseActivity() {
         val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val idiomaActual = prefs.getString("idioma", "es")
 
-        // Busca en qué posición está el idioma actual para seleccionarlo por defecto
         val indexActual = codigosIdioma.indexOf(idiomaActual)
-
         if (indexActual >= 0) {
             spinnerIdioma.setSelection(indexActual, false)
         }
 
+        // Listener para cambiar el idioma al seleccionar (Esto faltaba en el código de Giselle)
         spinnerIdioma.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val codigoSeleccionado = codigosIdioma[position]
@@ -95,7 +98,6 @@ class PerfilActivity : BaseActivity() {
                     recreate()
                 }
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -121,6 +123,7 @@ class PerfilActivity : BaseActivity() {
             return
         }
 
+        // Carga de datos (Es igual en ambos, usamos esta estructura limpia)
         if (tipoDeUsuario == 3) {
             lifecycleScope.launch {
                 try {
@@ -162,11 +165,7 @@ class PerfilActivity : BaseActivity() {
 
                 } catch (e: Exception) {
                     tvDatosPerfil.text = "Error: ${e.message}"
-                    Toast.makeText(
-                        this@PerfilActivity,
-                        "Error al cargar el perfil",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@PerfilActivity, "Error al cargar el perfil", Toast.LENGTH_SHORT).show()
                 }
             }
         } else if (tipoDeUsuario == 4) {
@@ -213,11 +212,7 @@ class PerfilActivity : BaseActivity() {
 
                 } catch (e: Exception) {
                     tvDatosPerfil.text = "Error: ${e.message}"
-                    Toast.makeText(
-                        this@PerfilActivity,
-                        "Error al cargar el perfil alumno",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@PerfilActivity, "Error al cargar el perfil alumno", Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
@@ -234,6 +229,7 @@ class PerfilActivity : BaseActivity() {
         }
     }
 
+    // Mantenemos TU función de subir imagen (Giselle la tenía comentada)
     private fun subirImagenAlServidor(bitmap: Bitmap) {
         lifecycleScope.launch {
             try {
@@ -259,5 +255,15 @@ class PerfilActivity : BaseActivity() {
                 Toast.makeText(this@PerfilActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    // Añadimos la función de Giselle por si acaso, aunque tu spinner ya hace el trabajo
+    private fun setLang(lang: String) {
+        val locale = java.util.Locale(lang)
+        java.util.Locale.setDefault(locale)
+        val config = resources.configuration
+        config.setLocale(locale)
+        resources.updateConfiguration(config, resources.displayMetrics)
+        recreate()
     }
 }

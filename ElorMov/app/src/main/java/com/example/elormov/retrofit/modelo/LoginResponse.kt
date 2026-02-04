@@ -8,5 +8,5 @@ data class LoginResponse(
     val mensaje: String,
 
     @SerializedName("user")
-    val user: Users // Ojo: Esta clase 'User' la creamos en el siguiente paso
+    val user: Users
 )

@@ -22,7 +22,8 @@ interface UsersInterface {
     @GET("api/users/{id}")
     suspend fun getUserById(@Path("id") id: Long): Response<Users>
 
-    @POST("/api/users/login")
+    // Login: Enviamos usuario/pass y recibimos respuesta
+    @POST("/api/users/login") // Ajusta la ruta si en tu Spring Boot es diferente
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 
     @GET("api/users/{id}/perfil-alumno")

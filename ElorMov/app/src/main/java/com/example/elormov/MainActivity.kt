@@ -2,23 +2,29 @@ package com.example.elormov
 
 import RetrofitClient
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager // <--- NUEVO
-import android.net.Network // <--- NUEVO
-import android.net.NetworkCapabilities // <--- NUEVO
-import android.net.NetworkRequest // <--- NUEVO
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
-import android.view.View // <--- NUEVO
+import android.util.Log
+import android.view.View
 import android.widget.Button
-import android.widget.LinearLayout // <--- NUEVO
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.elormov.retrofit.endpoints.PasswordInterface
 import com.example.elormov.retrofit.modelo.LoginRequest
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.example.elormov.retrofit.entities.Users
 
 class MainActivity : BaseActivity() {
 
@@ -26,30 +32,43 @@ class MainActivity : BaseActivity() {
 
     //ip para usar el servidor en el mismo pc
     private val ipServidor = "10.0.2.2"
+    //ip del servidor de Giselle:
     //private val ipServidor = "10.5.104.31" // Giselle
+    //ip del servidor de Maitane:
     //private val ipServidor = "10.5.104.25" // Maitane
+    //cambiar puerto cuando sea necesario
     private val puerto = 9000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        RetrofitClient.init(ipServidor, puerto)
+        // 1. Inicializar Retrofit
+        try {
+            RetrofitClient.init(ipServidor, puerto)
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error config: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
 
         conectarAlServidor(null)
 
+        // 2. Referencias UI
         val inputUsuario = findViewById<TextInputEditText>(R.id.InputEmail)
         val inputPassword = findViewById<TextInputEditText>(R.id.InputContrasenya)
+
+        // 3. Cargar datos previos si existen (Autocompletar)
         cargarDatosLogin(inputUsuario, inputPassword)
 
         val btnIniciarSesion = findViewById<Button>(R.id.buttonMainIniciarSesion)
-        val recuperarPassword = findViewById<TextView>(R.id.textRecuperarPassword)
+        val recuperarPasswordText = findViewById<TextView>(R.id.textRecuperarPassword)
 
-        recuperarPassword.setOnClickListener {
+        // 4. Listener Recuperar contraseña
+        recuperarPasswordText.setOnClickListener {
             popUpRecuperarContrasenna()
         }
 
         btnIniciarSesion.setOnClickListener {
+            // Obtenemos el texto de los inputs
             val usuario = inputUsuario.text.toString().trim()
             val password = inputPassword.text.toString().trim()
 
@@ -69,7 +88,9 @@ class MainActivity : BaseActivity() {
 
                         if (userOk != null) {
                             guardarDatos(usuario, password)
+
                             Toast.makeText(this@MainActivity, "Logeado con éxito", Toast.LENGTH_SHORT).show()
+
                             val tipoId = userOk.tipos?.id ?: -1
                             val intent = Intent(this@MainActivity, PaginaPrincipalActivity::class.java)
                             intent.putExtra("USER_ID", userOk.id)
@@ -85,6 +106,7 @@ class MainActivity : BaseActivity() {
                         Toast.makeText(this@MainActivity, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
+                    // Error de conexión
                     e.printStackTrace()
                     Toast.makeText(this@MainActivity, "Error: ${e.javaClass.simpleName} - ${e.message}", Toast.LENGTH_LONG).show()
                 }
@@ -100,6 +122,7 @@ class MainActivity : BaseActivity() {
         txtEstado?.text = "Estado: Conectando..."
         lifecycleScope.launch {
             try {
+                // "Ping": si esto responde, hay conexión al backend
                 RetrofitClient.usersInterface.getAllUsers()
                 txtEstado?.text = "Estado: Conectado"
             } catch (e: Exception) {
@@ -110,33 +133,80 @@ class MainActivity : BaseActivity() {
 
     private fun popUpRecuperarContrasenna() {
         val inputEmail = findViewById<TextInputEditText>(R.id.InputEmail)
-        val email = inputEmail.text.toString()
-        val mensaje = if (email.isNotEmpty()) "$email, ¿quieres recuperar tu contraseña?" else "¿Quieres recuperar tu contraseña?"
+        val username = inputEmail.text.toString()
+
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Por favor, ingresa tu username para recuperar", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val mensaje = "$username, ¿quieres recuperar tu contraseña?"
+
         androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Recuperar contraseña")
             .setMessage(mensaje)
-            .setPositiveButton("Sí") { _, _ -> Toast.makeText(this, "Se enviará un nuevo password", Toast.LENGTH_SHORT).show() }
+            .setPositiveButton("Sí") { _, _ ->
+                recuperarPasswordDeVerdad(username)
+            }
             .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
             .show()
     }
 
+    private fun recuperarPasswordDeVerdad(username: String) {
+        // Mostrar progress dialog
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Enviando nueva contraseña...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
+        // Hacer la petición al servidor
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val request = mapOf("username" to username)
+                val response = RetrofitClient.passwordInterface.recuperarPassword(request)
+
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    if (response.isSuccessful) {
+                        Toast.makeText(this@MainActivity, "Se ha enviado una nueva contraseña a tu email registrado", Toast.LENGTH_LONG).show()
+                    } else {
+                        val errorMsg = when (response.code()) {
+                            404 -> "Usuario no encontrado"
+                            400 -> "Username inválido"
+                            else -> "Error al procesar la solicitud"
+                        }
+                        Toast.makeText(this@MainActivity, errorMsg, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    progressDialog.dismiss()
+                    Toast.makeText(this@MainActivity, "Error de conexión: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("RecuperarPassword", "Error: ${e.message}", e)
+                }
+            }
+        }
+    }
+
     @SuppressLint("UseKtx")
-    private fun guardarDatos(email: String, password: String) {
+    private fun guardarDatos(usuario: String, password: String) {
         val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
         with(prefs.edit()) {
-            putString("email", email)
+            putString("username", usuario)
             putString("password", password)
             putBoolean("recordar", true)
             apply()
         }
     }
 
+    // Cargar de Preferencias
     private fun cargarDatosLogin(inputUsuario: TextInputEditText, inputPassword: TextInputEditText) {
         val prefs = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
         val recordar = prefs.getBoolean("recordar", false)
         if (recordar) {
-            inputUsuario.setText(prefs.getString("email", ""))
+            val savedUser = prefs.getString("username", null) ?: prefs.getString("email", "")
+            inputUsuario.setText(savedUser)
             inputPassword.setText(prefs.getString("password", ""))
         }
     }
-}
+} // Fin de la clase MainActivity

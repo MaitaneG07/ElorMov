@@ -1,5 +1,7 @@
 package com.example.elormov.retrofit.entities
 
+import java.io.Serializable
+
 data class Users(
     val id: Int,
     val email: String,
@@ -15,4 +17,4 @@ data class Users(
     val argazkiaUrl: String?,
     val createdAt: String?,
     val updatedAt: String?
-)
+) : Serializable

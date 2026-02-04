@@ -76,22 +76,28 @@ class CrearReunionActivity : AppCompatActivity() {
     private fun cargarUsuarios() {
         lifecycleScope.launch {
             try {
+                // OJO AQUÍ: Tu interfaz devuelve la lista 'pelada'.
+                // Si la petición falla, Retrofit lanzará una excepción (irá al catch).
+                // No hace falta .isSuccessful ni .body().
                 val todos = RetrofitClient.usersInterface.getAllUsers()
 
+                // Como 'todos' YA ES la lista, la usamos directamente:
                 listaProfesores = todos.filter { it.tipos?.id == 3 }
                 listaAlumnos = todos.filter { it.tipos?.id == 4 }
 
-                val nombresProjes = listaProfesores.map { "${it.nombre} ${it.apellidos}" }
+                // Mapeamos los nombres para el Spinner
+                val nombresProfes = listaProfesores.map { "${it.nombre} ${it.apellidos}" }
                 val nombresAlumnos = listaAlumnos.map { "${it.nombre} ${it.apellidos}" }
 
-                llenarSpinner(spinnerProfesor, nombresProjes)
+                llenarSpinner(spinnerProfesor, nombresProfes)
                 llenarSpinner(spinnerEstudiante, nombresAlumnos)
 
                 autoseleccionarUsuario()
 
             } catch (e: Exception) {
+                // Aquí caerán los errores de conexión o del servidor (500, 404, etc)
                 e.printStackTrace()
-                Toast.makeText(this@CrearReunionActivity, "Error cargando usuarios", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CrearReunionActivity, "Error al cargar usuarios: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
