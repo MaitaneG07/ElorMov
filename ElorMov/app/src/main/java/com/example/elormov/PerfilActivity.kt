@@ -3,6 +3,7 @@ package com.example.elormov
 import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
@@ -25,14 +27,13 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
-import okhttp3.RequestBody
 
-// Usamos BaseActivity para mantener coherencia con tu MainActivity
 class PerfilActivity : BaseActivity() {
 
     private lateinit var imagenSacada: ImageView
     private var userId: Int = -1
     private var tipoDeUsuario: Int = -1
+    private lateinit var prefs: SharedPreferences
 
     private val pedirPermisoCamara =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -49,13 +50,16 @@ class PerfilActivity : BaseActivity() {
                 val bmp = result.data?.extras?.get("data") as? Bitmap
                 if (bmp != null) {
                     imagenSacada.setImageBitmap(bmp)
-                    // Usamos tu lógica que sí sube la imagen
                     subirImagenAlServidor(bmp)
                 }
             }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val temaGuardado = prefs.getInt("tema", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        AppCompatDelegate.setDefaultNightMode(temaGuardado)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil)
 
@@ -67,8 +71,22 @@ class PerfilActivity : BaseActivity() {
         val botonCamara: Button = findViewById(R.id.buttonAnnadirImagen)
         imagenSacada = findViewById(R.id.imageViewPerfil)
         val spinnerIdioma: Spinner = findViewById(R.id.spinnerIdioma)
+        val botonTema: Button = findViewById(R.id.buttonCambiarTema)
 
-        // LÓGICA DE IDIOMAS (Usamos la TUYA porque tiene el Listener que hace que funcione)
+        botonTema.text = if (temaGuardado == AppCompatDelegate.MODE_NIGHT_YES) "Claro" else "Oscuro"
+
+        botonTema.setOnClickListener {
+            val modoActual = AppCompatDelegate.getDefaultNightMode()
+            val nuevoModo = if (modoActual == AppCompatDelegate.MODE_NIGHT_YES) {
+                AppCompatDelegate.MODE_NIGHT_NO
+            } else {
+                AppCompatDelegate.MODE_NIGHT_YES
+            }
+            prefs.edit().putInt("tema", nuevoModo).apply()
+            AppCompatDelegate.setDefaultNightMode(nuevoModo)
+            recreate()
+        }
+
         val opcionesMenu = listOf("ESP", "EUS", "ING")
         val codigosIdioma = listOf("es", "eus", "en")
 
@@ -80,24 +98,21 @@ class PerfilActivity : BaseActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerIdioma.adapter = adapter
 
-        val prefs = getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val idiomaActual = prefs.getString("idioma", "es")
-
         val indexActual = codigosIdioma.indexOf(idiomaActual)
         if (indexActual >= 0) {
             spinnerIdioma.setSelection(indexActual, false)
         }
 
-        // Listener para cambiar el idioma al seleccionar (Esto faltaba en el código de Giselle)
         spinnerIdioma.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val codigoSeleccionado = codigosIdioma[position]
-
                 if (codigoSeleccionado != idiomaActual) {
                     prefs.edit().putString("idioma", codigoSeleccionado).apply()
                     recreate()
                 }
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -123,7 +138,6 @@ class PerfilActivity : BaseActivity() {
             return
         }
 
-        // Carga de datos (Es igual en ambos, usamos esta estructura limpia)
         if (tipoDeUsuario == 3) {
             lifecycleScope.launch {
                 try {
@@ -157,12 +171,9 @@ class PerfilActivity : BaseActivity() {
                         } else {
                             imagenSacada.setImageResource(R.drawable.perfilsinimagen)
                         }
-
                     } else {
-                        tvDatosPerfil.text =
-                            "No se pudo cargar el perfil (HTTP ${response.code()})"
+                        tvDatosPerfil.text = "No se pudo cargar el perfil (HTTP ${response.code()})"
                     }
-
                 } catch (e: Exception) {
                     tvDatosPerfil.text = "Error: ${e.message}"
                     Toast.makeText(this@PerfilActivity, "Error al cargar el perfil", Toast.LENGTH_SHORT).show()
@@ -204,12 +215,9 @@ class PerfilActivity : BaseActivity() {
                         } else {
                             imagenSacada.setImageResource(R.drawable.perfilsinimagen)
                         }
-
                     } else {
-                        tvDatosPerfil.text =
-                            "No se pudo cargar el perfil alumno (HTTP ${response.code()})"
+                        tvDatosPerfil.text = "No se pudo cargar el perfil alumno (HTTP ${response.code()})"
                     }
-
                 } catch (e: Exception) {
                     tvDatosPerfil.text = "Error: ${e.message}"
                     Toast.makeText(this@PerfilActivity, "Error al cargar el perfil alumno", Toast.LENGTH_SHORT).show()
@@ -229,7 +237,6 @@ class PerfilActivity : BaseActivity() {
         }
     }
 
-    // Mantenemos TU función de subir imagen (Giselle la tenía comentada)
     private fun subirImagenAlServidor(bitmap: Bitmap) {
         lifecycleScope.launch {
             try {
@@ -238,26 +245,20 @@ class PerfilActivity : BaseActivity() {
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 90, it)
                 }
 
-                val reqBody = file
-                    .asRequestBody("image/*".toMediaTypeOrNull())
+                val reqBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+                val part = MultipartBody.Part.createFormData("file", file.name, reqBody)
 
-                val part = MultipartBody.Part
-                    .createFormData("file", file.name, reqBody)
-
-                val response = RetrofitClient.usersInterface
-                    .uploadFoto(userId.toLong(), part)
+                val response = RetrofitClient.usersInterface.uploadFoto(userId.toLong(), part)
 
                 if (!response.isSuccessful) {
                     Toast.makeText(this@PerfilActivity, "Error subiendo imagen", Toast.LENGTH_SHORT).show()
                 }
-
             } catch (e: Exception) {
                 Toast.makeText(this@PerfilActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // Añadimos la función de Giselle por si acaso, aunque tu spinner ya hace el trabajo
     private fun setLang(lang: String) {
         val locale = java.util.Locale(lang)
         java.util.Locale.setDefault(locale)
